@@ -1,0 +1,505 @@
+% !TEX program = pdflatex
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\Pb}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\1}{\mathbf{1}}
+\newcommand{\dd}{\,\mathrm{d}}
+\setlist[enumerate,1]{label=\textbf{(\alph*)},itemsep=0.35em,topsep=0.4em,leftmargin=2em}
+
+\title{Stochastic Calculus and Option Pricing\\Lecture 1 Instructor Corrections}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-1em}
+
+\section*{Part I --- Random Variables and Distributions}
+
+\subsection*{Exercise 1.1 --- A financial payoff as a random variable}
+\begin{enumerate}
+  \item The underlying is the stock, the maturity is $T=1$, and the strike is
+  $K=100$. The possible payoff values are $0$, $5$, and $40$.
+  \item The law of $X$ is
+  \[
+  \Pb(X=0)=\tfrac14,\qquad
+  \Pb(X=5)=\tfrac12,\qquad
+  \Pb(X=40)=\tfrac14.
+  \]
+  Hence
+  \[
+  F_X(x)=
+  \begin{cases}
+  0,&x<0,\\
+  \tfrac14,&0\le x<5,\\
+  \tfrac34,&5\le x<40,\\
+  1,&x\ge40.
+  \end{cases}
+  \]
+  \item Direct calculation gives
+  \[
+  \E[X]=\tfrac12(5)+\tfrac14(40)=12.5,
+  \qquad
+  \E[X^2]=\tfrac12(25)+\tfrac14(1600)=412.5.
+  \]
+  Therefore
+  \[
+  \operatorname{Var}(X)=412.5-12.5^2=256.25,
+  \qquad
+  \operatorname{SD}(X)=\sqrt{256.25}\approx16.01.
+  \]
+  \item The discounted physical expectation is
+  \[
+  e^{-0.03}\E[X]=12.5e^{-0.03}\approx12.13.
+  \]
+  It uses physical probabilities. A no-arbitrage price is instead fixed by a
+  replicating strategy, or equivalently by risk-neutral probabilities when
+  the claim is replicable.
+\end{enumerate}
+
+\subsection*{Exercise 1.2 --- Cdf, density, and moments}
+\begin{enumerate}
+  \item
+  \[
+  F_U(u)=
+  \begin{cases}
+  0,&u<-1,\\
+  \dfrac{u+1}{4},&-1\le u<3,\\
+  1,&u\ge3,
+  \end{cases}
+  \qquad
+  f_U(u)=\frac14\1_{[-1,3]}(u).
+  \]
+  \item From the cdf,
+  $\Pb(0<U\le2)=F_U(2)-F_U(0)=3/4-1/4=1/2$.
+  From the density, $\int_0^2(1/4)\dd u=1/2$.
+  \item
+  \[
+  \E[U]=\frac14\int_{-1}^3u\dd u=1,
+  \qquad
+  \E[U^2]=\frac14\int_{-1}^3u^2\dd u=\frac73,
+  \]
+  so $\operatorname{Var}(U)=7/3-1=4/3$.
+  \item Since $V=2U+1$, $V\sim\operatorname{Unif}[-1,7]$ and
+  \[
+  F_V(v)=F_U\!\left(\frac{v-1}{2}\right)
+  =\begin{cases}
+  0,&v<-1,\\
+  \dfrac{v+1}{8},&-1\le v<7,\\
+  1,&v\ge7.
+  \end{cases}
+  \]
+  Also $\E[V]=2\E[U]+1=3$ and
+  $\operatorname{Var}(V)=4\operatorname{Var}(U)=16/3$.
+\end{enumerate}
+
+\subsection*{Exercise 1.3 --- Empirical moments, LLN, and CLT}
+\begin{enumerate}
+  \item The sample mean is
+  \[
+  \overline x=\frac{2+5+4+3+6}{5}=4.
+  \]
+  The sum of squared deviations is $4+1+0+1+4=10$. Hence the empirical
+  variance is $v_5=10/5=2$, while the unbiased sample variance is
+  $s_5^2=10/(5-1)=2.5$.
+  \item Since $\E[X_1]=4<\infty$, the LLN gives
+  $\overline X_n\to4$ in probability. The average daily count stabilizes near
+  the population mean as the number of days grows.
+  \item For a Poisson$(4)$ variable, $\operatorname{Var}(X_1)=4$. Thus
+  \[
+  \frac{\sqrt n(\overline X_n-4)}{2}
+  \Rightarrow\mathcal N(0,1).
+  \]
+  For $n=100$, the approximate mean is $4$ and the standard deviation is
+  $2/\sqrt{100}=0.2$.
+  \item
+  \[
+  \Pb(\overline X_{100}>4.3)
+  \approx\Pb\!\left(Z>\frac{4.3-4}{0.2}\right)
+  =1-\Phi(1.5)\approx0.0668.
+  \]
+  \item The LLN identifies the limit of the average, whereas the CLT gives the
+  approximate distribution and $1/\sqrt n$ scale of its remaining error.
+\end{enumerate}
+
+\subsection*{Exercise 1.4 --- Characteristic function of a Gaussian}
+\begin{enumerate}
+  \item Since the standard Gaussian density is
+  $(2\pi)^{-1/2}e^{-z^2/2}$,
+  \[
+  \varphi_Z(u)
+  =\frac1{\sqrt{2\pi}}
+    \int_{-\infty}^{\infty}e^{iuz}e^{-z^2/2}\dd z.
+  \]
+  At $u=0$, the integral is the total mass of the density, so
+  $\varphi_Z(0)=1$.
+
+  \item Differentiation under the integral sign gives
+  \[
+  \varphi_Z'(u)
+  =\frac1{\sqrt{2\pi}}
+    \int_{-\infty}^{\infty}iz\,e^{iuz}e^{-z^2/2}\dd z.
+  \]
+  This interchange is justified, for example, by dominated convergence
+  because $|z|e^{-z^2/2}$ is integrable.
+
+  \item Since
+  $z e^{-z^2/2}=-\frac{\dd}{\dd z}e^{-z^2/2}$, integration by parts yields
+  \begin{align*}
+  \varphi_Z'(u)
+  &=-\frac{i}{\sqrt{2\pi}}
+    \int_{-\infty}^{\infty}e^{iuz}
+    \frac{\dd}{\dd z}\!\left(e^{-z^2/2}\right)\dd z\\
+  &=-\frac{i}{\sqrt{2\pi}}
+    \left(
+      \left[e^{iuz}e^{-z^2/2}\right]_{-\infty}^{\infty}
+      -iu\int_{-\infty}^{\infty}e^{iuz}e^{-z^2/2}\dd z
+    \right).
+  \end{align*}
+  Because $|e^{iuz}|=1$ and $e^{-z^2/2}\to0$ as $|z|\to\infty$, the
+  boundary term is zero. Therefore
+  \[
+  \varphi_Z'(u)=-u\varphi_Z(u).
+  \]
+
+  \item The differential equation can be written
+  $(e^{u^2/2}\varphi_Z(u))'=0$. Hence
+  \[
+  \varphi_Z(u)=C e^{-u^2/2}.
+  \]
+  The condition $\varphi_Z(0)=1$ gives $C=1$, and thus
+  \[
+  \boxed{\varphi_Z(u)=e^{-u^2/2}.}
+  \]
+
+  \item Using $X=\mu+\sigma Z$,
+  \begin{align*}
+  \varphi_X(u)
+  &=\E[e^{iu(\mu+\sigma Z)}]
+    =e^{i\mu u}\E[e^{i(\sigma u)Z}]\\
+  &=e^{i\mu u}\varphi_Z(\sigma u)
+    =\boxed{\exp\!\left(i\mu u-\frac12\sigma^2u^2\right)}.
+  \end{align*}
+
+  \item If $X_j\sim\mathcal N(\mu_j,\sigma_j^2)$ for $j=1,2$ and the
+  variables are independent, then
+  \begin{align*}
+  \varphi_{X_1+X_2}(u)
+  &=\varphi_{X_1}(u)\varphi_{X_2}(u)\\
+  &=\exp\!\left(
+    i(\mu_1+\mu_2)u-\frac12(\sigma_1^2+\sigma_2^2)u^2
+    \right).
+  \end{align*}
+  This is the characteristic function of
+  \[
+  X_1+X_2\sim
+  \mathcal N(\mu_1+\mu_2,\sigma_1^2+\sigma_2^2).
+  \]
+\end{enumerate}
+
+\section*{Part II --- Joint Distributions and Information}
+
+\subsection*{Exercise 1.5 --- Reading a joint law}
+\begin{enumerate}
+  \item The marginals are
+  \[
+  \Pb(X=0)=\Pb(X=1)=0.50,
+  \qquad
+  \Pb(Y=L)=0.30,
+  \quad
+  \Pb(Y=H)=0.70.
+  \]
+  \item They are not independent because, for example,
+  $\Pb(X=1,Y=L)=0.20\ne0.50\times0.30=0.15$.
+  \item
+  \[
+  \Pb(X=1\mid Y=L)=\frac{0.20}{0.30}=\frac23,
+  \qquad
+  \Pb(X=1\mid Y=H)=\frac{0.30}{0.70}=\frac37.
+  \]
+  \item The signal $L$ carries the larger conditional loss probability.
+\end{enumerate}
+
+\subsection*{Exercise 1.6 --- Information generated by a signal}
+Let $A=\{1,2,3\}$ and $B=\{4,5,6\}$.
+\begin{enumerate}
+  \item The level-set partition is $\{A,B\}$ and
+  $\mathcal G=\{\varnothing,A,B,\Omega\}$.
+  \item $Z_1$, $Z_2$, and $Z_4$ are constant on both $A$ and $B$, so they are
+  $\mathcal G$-measurable. The variable $Z_3$ is not: on $B$ it equals $0$ at
+  outcome $4$ and $1$ at outcomes $5,6$.
+  \item One may take $g(y)=(-1)^y=1-2y$ on $\{0,1\}$.
+  \item Observing $Y=1$ identifies only the block $B$; it does not distinguish
+  outcome $4$ from outcomes $5$ and $6$.
+\end{enumerate}
+
+\section*{Part III --- Conditional Expectation}
+
+\subsection*{Exercise 1.7 --- Conditional expectation on a finite partition}
+\begin{enumerate}
+  \item $X$ is not $\mathcal G$-measurable because it takes values $0$ and
+  $6$ on the same atom $M=\{3,4\}$.
+  \item The values of $X$ on outcomes $1,\ldots,6$ are
+  $0,0,0,6,6,6$, so $\E[X]=3$. The atom averages are $0$ on $L$, $3$ on $M$,
+  and $6$ on $H$.
+  \item
+  \[
+  \E[X\mid\mathcal G]=0\1_L+3\1_M+6\1_H.
+  \]
+  \item On $L$, both integrals are $0$. On $M$,
+  $\E[X\1_M]=6/6=1=3\Pb(M)$. On $H$,
+  $\E[X\1_H]=12/6=2=6\Pb(H)$. Thus the defining averaging property holds
+  on every atom and therefore on every event in $\mathcal G$.
+  \item
+  \[
+  \E[\E[X\mid\mathcal G]]
+  =0\cdot\frac13+3\cdot\frac13+6\cdot\frac13=3=\E[X].
+  \]
+\end{enumerate}
+
+\subsection*{Exercise 1.8 --- Conditional density and $\E[f(X)\mid Y]$}
+\begin{enumerate}
+  \item
+  \[
+  \int_0^1\!\int_0^1(x+y)\dd x\dd y=1.
+  \]
+  The marginals are
+  \[
+  f_X(x)=\left(x+\frac12\right)\1_{(0,1)}(x),
+  \qquad
+  f_Y(y)=\left(y+\frac12\right)\1_{(0,1)}(y).
+  \]
+  \item For $0<y<1$,
+  \[
+  f_{X\mid Y}(x\mid y)
+  =\frac{x+y}{y+1/2}\1_{(0,1)}(x).
+  \]
+  This conditional density depends on $y$, so $X$ and $Y$ are not independent.
+  \item
+  \[
+  \E[X\mid Y=y]
+  =\frac{\int_0^1x(x+y)\dd x}{y+1/2}
+  =\frac{1/3+y/2}{y+1/2}.
+  \]
+  Hence
+  \[
+  \E[X\mid Y]=\frac{1/3+Y/2}{Y+1/2}.
+  \]
+  \item Similarly,
+  \[
+  \E[X^2\mid Y=y]
+  =\frac{\int_0^1x^2(x+y)\dd x}{y+1/2}
+  =\frac{1/4+y/3}{y+1/2}.
+  \]
+  Thus $g(y)=(1/4+y/3)/(y+1/2)$ and
+  $\E[X^2\mid Y]=g(Y)$. It is $\sigma(Y)$-measurable because it is a
+  measurable function of $Y$.
+  \item Directly,
+  \[
+  \E[X]=\int_0^1x\left(x+\frac12\right)\dd x
+  =\frac13+\frac14=\frac7{12}.
+  \]
+  Using the marginal density of $Y$,
+  \[
+  \E[\E[X\mid Y]]
+  =\int_0^1\frac{1/3+y/2}{y+1/2}\left(y+\frac12\right)\dd y
+  =\int_0^1\left(\frac13+\frac y2\right)\dd y
+  =\frac7{12}.
+  \]
+\end{enumerate}
+
+\subsection*{Exercise 1.9 --- Gaussian conditioning}
+\begin{enumerate}
+  \item With $a=\operatorname{Cov}(X,Y)/\operatorname{Var}(Y)$,
+  \[
+  \operatorname{Cov}(R,Y)
+  =\operatorname{Cov}(X,Y)-a\operatorname{Var}(Y)=0.
+  \]
+  \item $(R,Y)$ is jointly Gaussian because it is an affine transformation of
+  $(X,Y)$. Jointly Gaussian and uncorrelated variables are independent.
+  \item Since $X=\mu_X+a(Y-\mu_Y)+R$ and $\E[R]=0$,
+  \[
+  \E[X\mid Y]
+  =\mu_X+\frac{\operatorname{Cov}(X,Y)}{\operatorname{Var}(Y)}(Y-\mu_Y)
+  =\mu_X+\rho\frac{\sigma_X}{\sigma_Y}(Y-\mu_Y).
+  \]
+  Also
+  \[
+  \operatorname{Var}(X\mid Y)=\operatorname{Var}(R)
+  =\sigma_X^2-\frac{\operatorname{Cov}(X,Y)^2}{\sigma_Y^2}
+  =\sigma_X^2(1-\rho^2).
+  \]
+  \item A larger $|\rho|$ makes $Y$ more informative about $X$ and reduces
+  the residual variance. When $|\rho|$ is close to one, the signal is an
+  effective hedge; when it is close to zero, little risk is explained.
+\end{enumerate}
+
+\section*{Part IV --- Stochastic Processes and Filtrations}
+
+\subsection*{Exercise 1.10 --- Three coin tosses viewed through time}
+\begin{enumerate}
+  \item $\mathcal F_0$ has the single atom $\Omega$. At the next dates,
+  \[
+  \begin{aligned}
+  \operatorname{Atoms}(\mathcal F_1)
+    &=\{H\!\ast\!\ast,T\!\ast\!\ast\},\\
+  \operatorname{Atoms}(\mathcal F_2)
+    &=\{HH\!\ast,HT\!\ast,TH\!\ast,TT\!\ast\},
+  \end{aligned}
+  \]
+  while $\mathcal F_3$ has the eight singleton outcomes. Each new observation
+  refines the preceding partition, so
+  \[
+  \mathcal F_0\subseteq\mathcal F_1
+  \subseteq\mathcal F_2\subseteq\mathcal F_3.
+  \]
+  \item $S_n$ is determined by the first $n$ tosses, hence is
+  $\mathcal F_n$-measurable for every $n$.
+  \item $A_2$ depends on the third toss and is not $\mathcal F_2$-measurable.
+  The other values are measurable at their respective times. The failure at
+  time $2$ is look-ahead.
+  \item The capped time is $1$ on $H**$, $2$ on $TH*$, and $3$ on $TT*$.
+  Moreover
+  \[
+  \{\tau\le0\}=\varnothing,
+  \quad
+  \{\tau\le1\}=H**,
+  \quad
+  \{\tau\le2\}=\Omega\setminus TT*,
+  \quad
+  \{\tau\le3\}=\Omega,
+  \]
+  and each event belongs to the corresponding sigma-algebra.
+\end{enumerate}
+
+\section*{Part V --- Martingales and Fair Games}
+
+\subsection*{Exercise 1.11 --- A fair but asymmetric random walk}
+\begin{enumerate}
+  \item
+  \[
+  \E[\xi_k]=2\cdot\frac13-1\cdot\frac23=0,
+  \qquad
+  \E[\xi_k^2]=4\cdot\frac13+1\cdot\frac23=2.
+  \]
+  The expected gain on each new play is zero, even though the possible gains
+  are asymmetric.
+  \item Since $S_n$ is $\mathcal F_n$-measurable and $\xi_{n+1}$ is centered
+  and independent of $\mathcal F_n$,
+  \[
+  \E[S_{n+1}\mid\mathcal F_n]
+  =S_n+\E[\xi_{n+1}\mid\mathcal F_n]=S_n.
+  \]
+  \item Expanding the square gives
+  \begin{align*}
+  \E[S_{n+1}^2-2(n+1)\mid\mathcal F_n]
+  &=S_n^2+2S_n\E[\xi_{n+1}]+\E[\xi_{n+1}^2]-2n-2\\
+  &=S_n^2-2n.
+  \end{align*}
+  \item With up probability $1/4$,
+  $\E[\xi_k]=2/4-3/4=-1/4$. Thus $S_n$ has predictable drift $-n/4$ and
+  \[
+  M_n=S_n+\frac n4
+  \]
+  is a martingale.
+  \item Conditional on the entire observed history, expected wealth after the
+  next fair play equals current wealth. Past wins or losses do not create a
+  predictable future gain.
+\end{enumerate}
+
+\subsection*{Exercise 1.12 --- Replication and risk-neutral pricing}
+\begin{enumerate}
+  \item
+  \[
+  \begin{array}{c|cc}
+   & \text{up} & \text{down}\\ \hline
+  S_1&65&45\\
+  H=(S_1-55)^+&10&0
+  \end{array}
+  \]
+  \item The stock-pricing equation is
+  \[
+  50=\frac1{1.05}\bigl(65q+45(1-q)\bigr),
+  \]
+  so $52.5=45+20q$ and $q=3/8\in(0,1)$.
+  \item
+  \[
+  V_0=\frac1{1.05}\left(10\cdot\frac38\right)=\frac{25}{7}\approx3.57.
+  \]
+  \item Solving
+  $65\Delta+B_1=10$ and $45\Delta+B_1=0$ gives
+  \[
+  \Delta=\frac12,
+  \qquad
+  B_1=-22.5.
+  \]
+  \item The initial replication cost is
+  \[
+  \Delta S_0+\frac{B_1}{R}
+  =25-\frac{22.5}{1.05}
+  =\frac{25}{7}=V_0.
+  \]
+  The physical up probability does not enter because the terminal payoff is
+  matched state by state.
+  \item Under the risk-neutral probability, the discounted stock price
+  satisfies $S_0=\E^q[S_1/R]$. The same martingale-pricing restriction gives
+  $V_0=\E^q[H/R]$ for the replicable claim.
+\end{enumerate}
+
+\section*{Part VI --- Mathematical Toolbox}
+
+\subsection*{Exercise 1.13 --- Derivatives, gradients, and the chain rule}
+\begin{enumerate}
+  \item
+  \[
+  \frac{(x+h)^2-x^2}{h}=2x+h\longrightarrow2x,
+  \]
+  so $g'(x)=2x$.
+  \item For $f(x,y)=x^2y+e^y$,
+  \[
+  f_x=2xy,
+  \qquad
+  f_y=x^2+e^y,
+  \qquad
+  \nabla f=(2xy,x^2+e^y).
+  \]
+  The second derivatives are
+  $f_{xx}=2y$, $f_{xy}=f_{yx}=2x$, and $f_{yy}=e^y$, hence
+  \[
+  \nabla^2f(x,y)=
+  \begin{pmatrix}2y&2x\\2x&e^y\end{pmatrix}.
+  \]
+  \item The multivariable chain rule gives
+  \[
+  h'(t)=V_t(t,S(t))+V_s(t,S(t))S'(t).
+  \]
+  \item For $V(t,s)=e^{-rt}s^2$,
+  \[
+  V_t=-re^{-rt}s^2,
+  \qquad
+  V_s=2e^{-rt}s,
+  \]
+  and therefore
+  \[
+  h'(t)=e^{-rt}\bigl(-rS(t)^2+2S(t)S'(t)\bigr).
+  \]
+  \item The payoff is not differentiable at $s=K$: the left derivative is
+  $0$ and the right derivative is $1$. Away from $K$,
+  \[
+  v'(s)=\begin{cases}0,&s<K,\\1,&s>K.\end{cases}
+  \]
+\end{enumerate}
+
+\end{document}

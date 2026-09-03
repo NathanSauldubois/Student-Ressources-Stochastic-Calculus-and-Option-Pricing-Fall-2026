@@ -1,0 +1,40 @@
+% !TEX program = pdflatex
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{docmute}
+
+\newcommand{\Pb}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\1}{\mathbf{1}}
+\newcommand{\dd}{\,\mathrm{d}}
+\setlist[enumerate,1]{label=\textbf{(\alph*)},itemsep=0.35em,topsep=0.4em,leftmargin=2em}
+
+\title{Stochastic Calculus and Option Pricing\\Synthesis Exercise Corrections}
+\author{}
+\date{}
+\let\synthmaketitle\maketitle
+
+\begin{document}
+\synthmaketitle
+\vspace{-1.2em}
+
+\section{Week 1 --- Option Pricing and Core Probability Tools}
+
+% Suppress the standalone title contained in the historical Week 1 source.
+\let\maketitle\relax
+\input{"Corrections_Lecture_1.tex"}
+
+\input{Week_2_Corrections}
+
+\end{document}

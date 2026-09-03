@@ -1,0 +1,198 @@
+\headcommand {\slideentry {0}{0}{1}{1/1}{}{0}}
+\headcommand {\beamer@framepages {1}{1}}
+\headcommand {\slideentry {0}{0}{2}{2/2}{}{0}}
+\headcommand {\beamer@framepages {2}{2}}
+\headcommand {\slideentry {0}{0}{3}{3/3}{}{0}}
+\headcommand {\beamer@framepages {3}{3}}
+\headcommand {\beamer@sectionpages {1}{3}}
+\headcommand {\beamer@subsectionpages {1}{3}}
+\headcommand {\sectionentry {1}{Continuous-Time Stochastic Processes}{4}{Continuous-Time Stochastic Processes}{0}}
+\headcommand {\slideentry {1}{0}{1}{4/4}{}{0}}
+\headcommand {\beamer@framepages {4}{4}}
+\headcommand {\beamer@subsectionpages {4}{4}}
+\headcommand {\beamer@subsectionentry {0}{1}{1}{5}{Processes, paths, and information}}
+\headcommand {\slideentry {1}{1}{1}{5/5}{Processes, paths, and information}{0}}
+\headcommand {\beamer@framepages {5}{5}}
+\headcommand {\slideentry {1}{1}{2}{6/6}{Processes, paths, and information}{0}}
+\headcommand {\beamer@framepages {6}{6}}
+\headcommand {\slideentry {1}{1}{3}{7/7}{Processes, paths, and information}{0}}
+\headcommand {\beamer@framepages {7}{7}}
+\headcommand {\slideentry {1}{1}{4}{8/8}{Processes, paths, and information}{0}}
+\headcommand {\beamer@framepages {8}{8}}
+\headcommand {\slideentry {1}{1}{5}{9/9}{Processes, paths, and information}{0}}
+\headcommand {\beamer@framepages {9}{9}}
+\headcommand {\slideentry {1}{1}{6}{10/10}{Processes, paths, and information}{0}}
+\headcommand {\beamer@framepages {10}{10}}
+\headcommand {\beamer@sectionpages {4}{10}}
+\headcommand {\beamer@subsectionpages {5}{10}}
+\headcommand {\sectionentry {2}{Brownian Construction and Gaussian Structure}{11}{Brownian Construction and Gaussian Structure}{0}}
+\headcommand {\slideentry {2}{0}{1}{11/11}{}{0}}
+\headcommand {\beamer@framepages {11}{11}}
+\headcommand {\beamer@subsectionpages {11}{11}}
+\headcommand {\beamer@subsectionentry {0}{2}{1}{12}{Why Brownian motion?}}
+\headcommand {\slideentry {2}{1}{1}{12/12}{Why Brownian motion?}{0}}
+\headcommand {\beamer@framepages {12}{12}}
+\headcommand {\beamer@subsectionpages {12}{12}}
+\headcommand {\beamer@subsectionentry {0}{2}{2}{13}{The discrete starting point}}
+\headcommand {\slideentry {2}{2}{1}{13/13}{The discrete starting point}{0}}
+\headcommand {\beamer@framepages {13}{13}}
+\headcommand {\slideentry {2}{2}{2}{14/14}{The discrete starting point}{0}}
+\headcommand {\beamer@framepages {14}{14}}
+\headcommand {\slideentry {2}{2}{3}{15/15}{The discrete starting point}{0}}
+\headcommand {\beamer@framepages {15}{15}}
+\headcommand {\beamer@subsectionpages {13}{15}}
+\headcommand {\beamer@subsectionentry {0}{2}{3}{16}{The defining properties}}
+\headcommand {\slideentry {2}{3}{1}{16/16}{The defining properties}{0}}
+\headcommand {\beamer@framepages {16}{16}}
+\headcommand {\slideentry {2}{3}{2}{17/17}{The defining properties}{0}}
+\headcommand {\beamer@framepages {17}{17}}
+\headcommand {\slideentry {2}{3}{3}{18/18}{The defining properties}{0}}
+\headcommand {\beamer@framepages {18}{18}}
+\headcommand {\slideentry {2}{3}{4}{19/19}{The defining properties}{0}}
+\headcommand {\beamer@framepages {19}{19}}
+\headcommand {\slideentry {2}{3}{5}{20/20}{The defining properties}{0}}
+\headcommand {\beamer@framepages {20}{20}}
+\headcommand {\beamer@subsectionpages {16}{20}}
+\headcommand {\beamer@subsectionentry {0}{2}{4}{21}{Gaussian finite-dimensional laws}}
+\headcommand {\slideentry {2}{4}{1}{21/21}{Gaussian finite-dimensional laws}{0}}
+\headcommand {\beamer@framepages {21}{21}}
+\headcommand {\slideentry {2}{4}{2}{22/22}{Gaussian finite-dimensional laws}{0}}
+\headcommand {\beamer@framepages {22}{22}}
+\headcommand {\slideentry {2}{4}{3}{23/23}{Gaussian finite-dimensional laws}{0}}
+\headcommand {\beamer@framepages {23}{23}}
+\headcommand {\slideentry {2}{4}{4}{24/24}{Gaussian finite-dimensional laws}{0}}
+\headcommand {\beamer@framepages {24}{24}}
+\headcommand {\beamer@subsectionpages {21}{24}}
+\headcommand {\beamer@subsectionentry {0}{2}{5}{25}{Continuity without smoothness}}
+\headcommand {\slideentry {2}{5}{1}{25/25}{Continuity without smoothness}{0}}
+\headcommand {\beamer@framepages {25}{25}}
+\headcommand {\slideentry {2}{5}{2}{26/26}{Continuity without smoothness}{0}}
+\headcommand {\beamer@framepages {26}{26}}
+\headcommand {\beamer@sectionpages {11}{26}}
+\headcommand {\beamer@subsectionpages {25}{26}}
+\headcommand {\sectionentry {3}{Markov Property as Renewal}{27}{Markov Property as Renewal}{0}}
+\headcommand {\slideentry {3}{0}{1}{27/27}{}{0}}
+\headcommand {\beamer@framepages {27}{27}}
+\headcommand {\beamer@subsectionpages {27}{27}}
+\headcommand {\beamer@subsectionentry {0}{3}{1}{28}{Restarting at deterministic times}}
+\headcommand {\slideentry {3}{1}{1}{28/28}{Restarting at deterministic times}{0}}
+\headcommand {\beamer@framepages {28}{28}}
+\headcommand {\slideentry {3}{1}{2}{29/29}{Restarting at deterministic times}{0}}
+\headcommand {\beamer@framepages {29}{29}}
+\headcommand {\slideentry {3}{1}{3}{30/30}{Restarting at deterministic times}{0}}
+\headcommand {\beamer@framepages {30}{30}}
+\headcommand {\slideentry {3}{1}{4}{31/31}{Restarting at deterministic times}{0}}
+\headcommand {\beamer@framepages {31}{31}}
+\headcommand {\slideentry {3}{1}{5}{32/32}{Restarting at deterministic times}{0}}
+\headcommand {\beamer@framepages {32}{32}}
+\headcommand {\slideentry {3}{1}{6}{33/33}{Restarting at deterministic times}{0}}
+\headcommand {\beamer@framepages {33}{33}}
+\headcommand {\beamer@sectionpages {27}{33}}
+\headcommand {\beamer@subsectionpages {28}{33}}
+\headcommand {\sectionentry {4}{Stopping Times and Strong Markov Property}{34}{Stopping Times and Strong Markov Property}{0}}
+\headcommand {\slideentry {4}{0}{1}{34/34}{}{0}}
+\headcommand {\beamer@framepages {34}{34}}
+\headcommand {\beamer@subsectionpages {34}{34}}
+\headcommand {\beamer@subsectionentry {0}{4}{1}{35}{Stopping without looking ahead}}
+\headcommand {\slideentry {4}{1}{1}{35/35}{Stopping without looking ahead}{0}}
+\headcommand {\beamer@framepages {35}{35}}
+\headcommand {\slideentry {4}{1}{2}{36/36}{Stopping without looking ahead}{0}}
+\headcommand {\beamer@framepages {36}{36}}
+\headcommand {\slideentry {4}{1}{3}{37/37}{Stopping without looking ahead}{0}}
+\headcommand {\beamer@framepages {37}{37}}
+\headcommand {\slideentry {4}{1}{4}{38/38}{Stopping without looking ahead}{0}}
+\headcommand {\beamer@framepages {38}{38}}
+\headcommand {\slideentry {4}{1}{5}{39/39}{Stopping without looking ahead}{0}}
+\headcommand {\beamer@framepages {39}{39}}
+\headcommand {\slideentry {4}{1}{6}{40/40}{Stopping without looking ahead}{0}}
+\headcommand {\beamer@framepages {40}{40}}
+\headcommand {\slideentry {4}{1}{7}{41/42}{Stopping without looking ahead}{0}}
+\headcommand {\beamer@framepages {41}{42}}
+\headcommand {\beamer@subsectionpages {35}{42}}
+\headcommand {\beamer@subsectionentry {0}{4}{2}{43}{Strong Markov property}}
+\headcommand {\slideentry {4}{2}{1}{43/43}{Strong Markov property}{0}}
+\headcommand {\beamer@framepages {43}{43}}
+\headcommand {\slideentry {4}{2}{2}{44/44}{Strong Markov property}{0}}
+\headcommand {\beamer@framepages {44}{44}}
+\headcommand {\slideentry {4}{2}{3}{45/45}{Strong Markov property}{0}}
+\headcommand {\beamer@framepages {45}{45}}
+\headcommand {\slideentry {4}{2}{4}{46/46}{Strong Markov property}{0}}
+\headcommand {\beamer@framepages {46}{46}}
+\headcommand {\slideentry {4}{2}{5}{47/47}{Strong Markov property}{0}}
+\headcommand {\beamer@framepages {47}{47}}
+\headcommand {\beamer@sectionpages {34}{47}}
+\headcommand {\beamer@subsectionpages {43}{47}}
+\headcommand {\sectionentry {5}{Reflection Principle and Hitting Probabilities}{48}{Reflection Principle and Hitting Probabilities}{0}}
+\headcommand {\slideentry {5}{0}{1}{48/48}{}{0}}
+\headcommand {\beamer@framepages {48}{48}}
+\headcommand {\beamer@subsectionpages {48}{48}}
+\headcommand {\beamer@subsectionentry {0}{5}{1}{49}{Path transformation}}
+\headcommand {\slideentry {5}{1}{1}{49/49}{Path transformation}{0}}
+\headcommand {\beamer@framepages {49}{49}}
+\headcommand {\slideentry {5}{1}{2}{50/50}{Path transformation}{0}}
+\headcommand {\beamer@framepages {50}{50}}
+\headcommand {\slideentry {5}{1}{3}{51/51}{Path transformation}{0}}
+\headcommand {\beamer@framepages {51}{51}}
+\headcommand {\beamer@subsectionpages {49}{51}}
+\headcommand {\beamer@subsectionentry {0}{5}{2}{52}{Consequences}}
+\headcommand {\slideentry {5}{2}{1}{52/52}{Consequences}{0}}
+\headcommand {\beamer@framepages {52}{52}}
+\headcommand {\slideentry {5}{2}{2}{53/53}{Consequences}{0}}
+\headcommand {\beamer@framepages {53}{53}}
+\headcommand {\slideentry {5}{2}{3}{54/54}{Consequences}{0}}
+\headcommand {\beamer@framepages {54}{54}}
+\headcommand {\slideentry {5}{2}{4}{55/55}{Consequences}{0}}
+\headcommand {\beamer@framepages {55}{55}}
+\headcommand {\slideentry {5}{2}{5}{56/56}{Consequences}{0}}
+\headcommand {\beamer@framepages {56}{56}}
+\headcommand {\beamer@sectionpages {48}{56}}
+\headcommand {\beamer@subsectionpages {52}{56}}
+\headcommand {\sectionentry {6}{Quadratic Variation and Brownian Roughness}{57}{Quadratic Variation and Brownian Roughness}{0}}
+\headcommand {\slideentry {6}{0}{1}{57/57}{}{0}}
+\headcommand {\beamer@framepages {57}{57}}
+\headcommand {\beamer@subsectionpages {57}{57}}
+\headcommand {\beamer@subsectionentry {0}{6}{1}{58}{Why ordinary calculus is not enough}}
+\headcommand {\slideentry {6}{1}{1}{58/58}{Why ordinary calculus is not enough}{0}}
+\headcommand {\beamer@framepages {58}{58}}
+\headcommand {\slideentry {6}{1}{2}{59/59}{Why ordinary calculus is not enough}{0}}
+\headcommand {\beamer@framepages {59}{59}}
+\headcommand {\slideentry {6}{1}{3}{60/60}{Why ordinary calculus is not enough}{0}}
+\headcommand {\beamer@framepages {60}{60}}
+\headcommand {\slideentry {6}{1}{4}{61/61}{Why ordinary calculus is not enough}{0}}
+\headcommand {\beamer@framepages {61}{61}}
+\headcommand {\slideentry {6}{1}{5}{62/62}{Why ordinary calculus is not enough}{0}}
+\headcommand {\beamer@framepages {62}{62}}
+\headcommand {\slideentry {6}{1}{6}{63/63}{Why ordinary calculus is not enough}{0}}
+\headcommand {\beamer@framepages {63}{63}}
+\headcommand {\slideentry {6}{1}{7}{64/64}{Why ordinary calculus is not enough}{0}}
+\headcommand {\beamer@framepages {64}{64}}
+\headcommand {\slideentry {6}{1}{8}{65/65}{Why ordinary calculus is not enough}{0}}
+\headcommand {\beamer@framepages {65}{65}}
+\headcommand {\slideentry {6}{1}{9}{66/66}{Why ordinary calculus is not enough}{0}}
+\headcommand {\beamer@framepages {66}{66}}
+\headcommand {\slideentry {6}{1}{10}{67/67}{Why ordinary calculus is not enough}{0}}
+\headcommand {\beamer@framepages {67}{67}}
+\headcommand {\beamer@sectionpages {57}{67}}
+\headcommand {\beamer@subsectionpages {58}{67}}
+\headcommand {\sectionentry {7}{From Brownian Motion to a Positive Price Model}{68}{From Brownian Motion to a Positive Price Model}{0}}
+\headcommand {\slideentry {7}{0}{1}{68/68}{}{0}}
+\headcommand {\beamer@framepages {68}{68}}
+\headcommand {\beamer@subsectionpages {68}{68}}
+\headcommand {\beamer@subsectionentry {0}{7}{1}{69}{Geometric Brownian motion}}
+\headcommand {\slideentry {7}{1}{1}{69/69}{Geometric Brownian motion}{0}}
+\headcommand {\beamer@framepages {69}{69}}
+\headcommand {\slideentry {7}{1}{2}{70/70}{Geometric Brownian motion}{0}}
+\headcommand {\beamer@framepages {70}{70}}
+\headcommand {\slideentry {7}{1}{3}{71/71}{Geometric Brownian motion}{0}}
+\headcommand {\beamer@framepages {71}{71}}
+\headcommand {\slideentry {7}{1}{4}{72/72}{Geometric Brownian motion}{0}}
+\headcommand {\beamer@framepages {72}{72}}
+\headcommand {\slideentry {7}{1}{5}{73/73}{Geometric Brownian motion}{0}}
+\headcommand {\beamer@framepages {73}{73}}
+\headcommand {\slideentry {7}{1}{6}{74/74}{Geometric Brownian motion}{0}}
+\headcommand {\beamer@framepages {74}{74}}
+\headcommand {\beamer@partpages {1}{74}}
+\headcommand {\beamer@subsectionpages {69}{74}}
+\headcommand {\beamer@sectionpages {68}{74}}
+\headcommand {\beamer@documentpages {74}}
+\headcommand {\gdef \inserttotalframenumber {73}}

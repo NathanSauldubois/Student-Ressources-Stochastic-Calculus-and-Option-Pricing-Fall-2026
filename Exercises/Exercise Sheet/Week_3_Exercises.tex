@@ -1,0 +1,361 @@
+% Week 3 section of the canonical synthesis exercise sheet.
+% Included by Exercises.tex and by the lecture-specific wrapper.
+
+\section{Week 3 --- Stochastic Integration: Construction and Applications}
+
+\lecturesummary{Left-point gains and predictability; simple stochastic
+integrals; the It\^o isometry and the \(L^2\) extension; the integrability
+required for true martingales; conditional variance, stopping, and quadratic
+variation; deterministic Gaussian integrals; deterministic integration by
+parts; left/right/midpoint conventions; and simulation diagnostics. No
+general It\^o formula is used.}
+
+\subsection*{Part I --- Predictability and Simple Integrals}
+
+\begin{exercise}[Level 1 --- Information available at the trading time]
+Let \((W_t)_{t\geq0}\) be Brownian motion with its natural filtration. On the
+grid \(0,1,2\), write \(\Delta W_i=W_{i+1}-W_i\).
+\begin{exparts}
+  \item For each rule below, determine whether the position used on
+  \((i,i+1]\) is predictable:
+  \begin{enumerate}[label=(\roman*),leftmargin=2.4em,itemsep=0.1em]
+    \item \(\phi_0=1\), \(\phi_1=1+W_1^2\);
+    \item \(\phi_0=\operatorname{sign}(W_1)\), \(\phi_1=0\);
+    \item \(\phi_0=0\), \(\phi_1=\1_{\{W_1>0\}}\);
+    \item \(\phi_i=\operatorname{sign}(\Delta W_i)\).
+  \end{enumerate}
+  Justify each answer with the relevant measurability statement.
+  \item For every admissible rule, write the terminal gain explicitly as a
+  weighted sum of Brownian increments.
+  \item Suppose \(\phi_{t_i}\in\F_{t_i}\) and
+  \(\E[\phi_{t_i}^2]<\infty\). Prove that
+  \[
+  \E[\phi_{t_i}\Delta W_i\mid\F_{t_i}]=0.
+  \]
+  \item Explain why the last identity prevents a predictable Brownian trading
+  strategy from creating positive expected gain, but does not prevent it from
+  changing risk.
+\end{exparts}
+\end{exercise}
+
+\begin{exercise}[Level 1 --- Deterministic and random step strategies]
+Consider the processes
+\[
+\phi_t=2\1_{(0,1]}(t)-\1_{(1,3]}(t)
+\]
+and
+\[
+\psi_t=\1_{\{W_1>0\}}\1_{(1,2]}(t).
+\]
+\begin{exparts}
+  \item Verify that both processes are predictable.
+  \item Write \(\int_0^3\phi_t\dd W_t\) and
+  \(\int_0^2\psi_t\dd W_t\) without integral notation.
+  \item Identify the law of the first integral.
+  \item Compute the mean and second moment of the second integral.
+  \item Show that the second integral has an atom at zero and identify its law
+  as a mixture. Why is it not Gaussian?
+  \item Explain why deterministic integrands behave differently from random
+  predictable integrands with respect to Gaussianity.
+\end{exparts}
+\end{exercise}
+
+\subsection*{Part II --- Isometry and the \(L^2\) Construction}
+
+\begin{exercise}[Level 2 --- Prove the It\^o isometry]
+Let
+\[
+\phi_t=\sum_{i=0}^{n-1}\xi_i\1_{(t_i,t_{i+1}]}(t),
+\qquad
+\xi_i\in\F_{t_i},
+\qquad
+\E[\xi_i^2]<\infty.
+\]
+Set \(I(\phi)=\sum_i\xi_i\Delta W_i\).
+\begin{exparts}
+  \item Prove that \(\E[I(\phi)]=0\).
+  \item If \(i<j\), prove carefully that
+  \[
+  \E[\xi_i\Delta W_i\,\xi_j\Delta W_j]=0
+  \]
+  by conditioning on \(\F_{t_j}\).
+  \item Prove the isometry
+  \[
+  \E[I(\phi)^2]=\E\int_0^T\phi_t^2\dd t.
+  \]
+  \item For another simple predictable process \(\psi\), derive
+  \[
+  \E[I(\phi)I(\psi)]=\E\int_0^T\phi_t\psi_t\dd t.
+  \]
+  \item If \(|\phi_t|\leq L\), prove the risk bound
+  \[
+  \operatorname{Var}(I(\phi))\leq L^2T.
+  \]
+\end{exparts}
+\end{exercise}
+
+\begin{exercise}[Level 2 --- Approximation and an exact \(L^2\) error]
+Let \(f(t)=t\) on \([0,T]\), take the uniform grid \(t_i=iT/n\), and define
+the left-step approximation
+\[
+f_n(t)=\sum_{i=0}^{n-1}t_i\1_{(t_i,t_{i+1}]}(t).
+\]
+\begin{exparts}
+  \item Compute
+  \[
+  \int_0^T|f(t)-f_n(t)|^2\dd t
+  \]
+  exactly.
+  \item Deduce from the isometry that
+  \[
+  \sum_{i=0}^{n-1}t_i\Delta W_i
+  \longrightarrow \int_0^Tt\dd W_t
+  \quad\text{in }L^2(\Omega).
+  \]
+  Give the exact root-mean-square error.
+  \item Explain why the isometry makes the integral independent of the chosen
+  sequence of simple predictable approximations.
+  \item On \([0,1]\), compare
+  \[
+  \phi_t=1,
+  \qquad
+  \psi_t=\sqrt2\,\1_{(0,1/2]}(t).
+  \]
+  Show that the two terminal integrals have the same law but that their gain
+  processes do not accumulate risk at the same times.
+\end{exparts}
+\end{exercise}
+
+\subsection*{Part III --- Martingales, Integrability, and Stopping}
+
+\begin{exercise}[Level 2 --- Audit the martingale assumptions]
+Let \(\phi\) be predictable and suppose
+\[
+\E\int_0^T\phi_s^2\dd s<\infty.
+\]
+Define \(M_t=\int_0^t\phi_s\dd W_s\).
+\begin{exparts}
+  \item Use the isometry and Cauchy--Schwarz to prove that
+  \[
+  \E|M_t|
+  \leq
+  \left(\E\int_0^t\phi_s^2\dd s\right)^{1/2}<\infty.
+  \]
+  Explain why checking \(M_t\in L^1\) is logically necessary before using a
+  conditional expectation in the definition of a martingale.
+  \item Prove the martingale identity first for a simple predictable process,
+  then explain how \(L^2\) approximation allows passage to a general \(\phi\).
+  \item Show that \(L^2\) convergence implies the \(L^1\) convergence needed
+  to pass conditional expectations to the limit.
+  \item State clearly the difference between the assumptions
+  \[
+  \E\int_0^T\phi_s^2\dd s<\infty
+  \qquad\text{and}\qquad
+  \int_0^T\phi_s^2\dd s<\infty\quad\text{a.s.}
+  \]
+  What type of martingale is guaranteed by each condition?
+\end{exparts}
+\end{exercise}
+
+\begin{exercise}[Level 3 --- Pathwise finite energy need not give a true martingale]
+Let \(X\geq0\) be finite almost surely, independent of \(W\), and satisfy
+\(\E[X]=\infty\). Enlarge the filtration so that \(X\in\F_0\), and set
+\(\phi_t=X\).
+\begin{exparts}
+  \item Show that \(\phi\) is predictable and
+  \[
+  \int_0^T\phi_t^2\dd t=X^2T<\infty
+  \quad\text{a.s.}
+  \]
+  \item Show formally, and then through localization, that
+  \[
+  M_t=\int_0^tX\dd W_s=XW_t.
+  \]
+  \item Prove that \(\E|M_t|=\infty\) for every \(t>0\). Deduce that \(M\)
+  is not a true martingale.
+  \item For \(n\geq1\), define
+  \[
+  \tau_n=
+  \begin{cases}
+  \infty,&X\leq n,\\
+  0,&X>n.
+  \end{cases}
+  \]
+  Verify that \(\tau_n\uparrow\infty\) almost surely and that
+  \((M_{t\wedge\tau_n})_{t\geq0}\) is a square-integrable martingale.
+  Conclude that \(M\) is a local martingale.
+  \item Explain how the conclusions change if \(\E[X^2]<\infty\).
+\end{exparts}
+\end{exercise}
+
+\begin{exercise}[Level 2 --- Conditional risk of a state-dependent strategy]
+On \([0,2]\), define
+\[
+\phi_t=\1_{(0,1]}(t)
++\bigl(1+\1_{\{W_1>0\}}\bigr)\1_{(1,2]}(t),
+\qquad
+M_t=\int_0^t\phi_s\dd W_s.
+\]
+\begin{exparts}
+  \item Verify predictability and expected finite energy.
+  \item Compute \(M_1\) and write \(M_2-M_1\) explicitly.
+  \item Compute \(\E[M_2\mid\F_1]\).
+  \item Find \(\operatorname{Var}(M_2-M_1\mid\F_1)\) and the conditional law
+  of \(M_2\) given \(\F_1\).
+  \item Compute \([M]_2\) and interpret it as a state-dependent exposure
+  clock.
+\end{exparts}
+\end{exercise}
+
+\begin{exercise}[Level 2 --- Stop the exposure at a barrier]
+Let \(\tau\) be a stopping time and define
+\[
+M_t=\int_0^t\1_{\{s\leq\tau\}}\dd W_s.
+\]
+\begin{exparts}
+  \item Give the trading interpretation of the integrand and show that
+  \(M_t=W_{t\wedge\tau}\).
+  \item For fixed finite \(t\), verify
+  \[
+  \E\int_0^t\1_{\{s\leq\tau\}}^2\dd s
+  =\E[t\wedge\tau]\leq t.
+  \]
+  Explain why this is the relevant integrability check.
+  \item Deduce
+  \[
+  \E[W_{t\wedge\tau}]=0,
+  \qquad
+  \E[W_{t\wedge\tau}^2]=\E[t\wedge\tau].
+  \]
+  \item Apply the result to
+  \(\tau_a=\inf\{u\geq0:W_u=a\}\), with \(a>0\), without using the
+  density of \(\tau_a\).
+  \item Explain why these conclusions do not require \(\tau\) itself to be
+  bounded.
+\end{exparts}
+\end{exercise}
+
+\subsection*{Part IV --- Deterministic Gaussian Applications}
+
+\begin{exercise}[Level 2 --- Gaussian projection and independent risks]
+Let
+\[
+I_T=\int_0^Tt\dd W_t.
+\]
+\begin{exparts}
+  \item Identify the law of \(I_T\).
+  \item Write \(W_T\) as a stochastic integral and compute
+  \(\operatorname{Cov}(I_T,W_T)\).
+  \item Find \(\E[I_T\mid W_T]\) and
+  \(\operatorname{Var}(I_T\mid W_T)\).
+  \item Find an affine function \(g(t)=t-c\) such that
+  \[
+  Y=\int_0^Tg(t)\dd W_t
+  \]
+  is independent of \(W_T\), and compute \(\operatorname{Var}(Y)\).
+  \item Interpret the preceding calculations as orthogonal projection in
+  \(L^2(0,T)\).
+  \item For \(M_t=\int_0^ts\dd W_s\), show that
+  \[
+  (M_t)_{t\geq0}\overset{\mathrm{law}}=
+  (B_{t^3/3})_{t\geq0}
+  \]
+  for a Brownian motion \(B\).
+\end{exparts}
+\end{exercise}
+
+\begin{exercise}[Level 2 --- Deterministic integration by parts and Brownian area]
+Let \(f:[0,T]\to\R\) be deterministic and absolutely continuous with
+\(f'\in L^2(0,T)\).
+\begin{exparts}
+  \item Explain why \(f'\in L^1(0,T)\), why \(f\) has finite variation, and
+  why \(f\in L^2(0,T)\).
+  \item Starting from discrete summation by parts, prove
+  \[
+  f(T)W_T-f(0)W_0
+  =\int_0^Tf(t)\dd W_t+\int_0^TW_tf'(t)\dd t.
+  \]
+  Make clear which limit is in \(L^2\) and which is pathwise.
+  \item Explain why no general It\^o formula and no quadratic-variation
+  correction are needed.
+  \item With \(f(t)=t\), prove
+  \[
+  \int_0^TW_t\dd t
+  =TW_T-\int_0^Tt\dd W_t.
+  \]
+  \item Identify the law of the Brownian area
+  \(A_T=\int_0^TW_t\dd t\).
+\end{exparts}
+\end{exercise}
+
+\subsection*{Part V --- Conventions and Simulation}
+
+\begin{exercise}[Level 2 --- Left, right, and midpoint sums]
+For a partition \(\pi\) of \([0,T]\), define
+\[
+L^\pi=\sum_iW_{t_i}\Delta W_i,
+\quad
+R^\pi=\sum_iW_{t_{i+1}}\Delta W_i,
+\quad
+S^\pi=\sum_i\frac{W_{t_i}+W_{t_{i+1}}}{2}\Delta W_i.
+\]
+\begin{exparts}
+  \item Use
+  \[
+  W_{t_{i+1}}^2-W_{t_i}^2
+  =2W_{t_i}\Delta W_i+(\Delta W_i)^2
+  \]
+  to identify the limit of \(L^\pi\).
+  \item Deduce the limits of \(R^\pi\) and \(S^\pi\).
+  \item Compute the mean of each limit. Which convention preserves the
+  zero-mean martingale-gain interpretation?
+  \item Let \(I_T=\int_0^TW_t\dd W_t\). Compute \(\E[I_T^2]\) from the
+  explicit formula and again from the isometry.
+  \item Explain exactly what is illegal about choosing
+  \(\phi_{t_i}=\operatorname{sign}(\Delta W_i)\).
+\end{exparts}
+\end{exercise}
+
+\begin{exercise}[Level 2 --- Simulation error and implementation checks]
+On the uniform grid \(t_i=iT/n\), simulate
+\[
+\Delta W_i=\sqrt{\Delta t}\,Z_i,
+\qquad
+Z_i\overset{\mathrm{iid}}{\sim}\mathcal N(0,1),
+\qquad
+\Delta t=T/n.
+\]
+Define
+\[
+I^{(n)}=\sum_{i=0}^{n-1}W_{t_i}\Delta W_i,
+\qquad
+I=\int_0^TW_t\dd W_t.
+\]
+\begin{exparts}
+  \item Prove the exact error identity
+  \[
+  I-I^{(n)}
+  =\frac12\sum_{i=0}^{n-1}\bigl((\Delta W_i)^2-\Delta t\bigr).
+  \]
+  \item Derive
+  \[
+  \E[(I-I^{(n)})^2]=\frac{T^2}{2n}
+  \qquad\text{and}\qquad
+  \operatorname{RMSE}(I^{(n)})=\frac{T}{\sqrt{2n}}.
+  \]
+  \item For a state-dependent integrand \(\phi_t=h(W_t)\), write the correct
+  order in which \(\phi_i\), \(I_{i+1}\), and \(W_{t_{i+1}}\) must be
+  updated.
+  \item Explain the effect of each implementation error:
+  \begin{enumerate}[label=(\roman*),leftmargin=2.4em,itemsep=0.1em]
+    \item using \(\Delta t\,Z_i\) instead of \(\sqrt{\Delta t}\,Z_i\);
+    \item computing \(\phi_i\) from \(W_{t_{i+1}}\);
+    \item using independent Brownian increments for the state and its
+    stochastic integral;
+    \item replacing \(\Delta W_i\) by \(\Delta t\).
+  \end{enumerate}
+  \item Propose at least four diagnostics involving means, second moments,
+  covariance, grid refinement, or exact benchmarks. Explain why inspecting one
+  plausible path is not sufficient.
+\end{exparts}
+\end{exercise}

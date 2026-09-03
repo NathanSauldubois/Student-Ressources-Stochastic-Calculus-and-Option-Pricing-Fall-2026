@@ -1,0 +1,279 @@
+%\input{decla}
+
+\documentclass{article}
+\usepackage[latin1]{inputenc}
+%\usepackage{color} 
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts,amsthm}
+\pagestyle{myheadings}
+\usepackage{makeidx}
+\makeindex
+%\usepackage[notcite,notref]{showkeys}
+%\pagestyle{myheadings}
+%\usepackage[a4paper,left=2cm, right=2cm, top=3cm,bottom=2cm,nomarginpar, includeheadfoot,head=12pt,headsep=18pt]{geometry}
+
+% Fuzz -----------------------------------------------------------
+\hfuzz5pt % Don't bother to report overfull boxes < 5pt
+
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\ba}{\begin{eqnarray}}
+\newcommand{\ea}{\end{eqnarray}}
+\newcommand{\grad}{\mathop{\mathrm{grad}}\nolimits}
+\newcommand{\dom}{\mathop{\rm Dom}\nolimits}
+\newcommand{\ran}{\mathop{\rm Ran}\nolimits}
+\newcommand{\sgn}{\mathop{\mathrm{sgn}}\nolimits}
+\newcommand{\pder}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\pdder}[2]{\frac{\partial^2 #1}{\partial #2^2}}
+\newcommand{\croc}[1]{\langle #1\rangle}
+\newcommand{\basis}{$(\Omega,{\cal F},({\cal F}_t),P)$}
+\newcommand{\pspace}{$(\Omega,{\cal F},P)$}
+\newcommand{\triplet}{$(A,\nu,\gamma)$}
+\newcommand{\intinf}{\int_{-\infty}^{\infty}}
+\newcommand{\suminf}{\sum_{k=0}^{\infty}}
+
+\newcommand{\proc}[1][X]{\ensuremath{\{#1_t\}_{t\geq 0}}}
+%%% --------------------------------------------------------------
+%\newcommand{\cred}{\color{red}}
+%\newcommand{\cblue}{\color{blue}}
+%\newcommand{\cblack}{\color{black}}
+%\newcommand{\cgreen}{\color{green}}
+%\newrgbcolor{mgray}{.75 .75 .75}
+%\newrgbcolor{blue}{0 0 1}
+%\newrgbcolor{black}{0 0 0}
+\newcommand{\gbul}{{$\bullet$\ \ }}
+%\newcommand{\gbul}{\hbox to 0.5cm {\cgreen $\bullet$\hfil}}
+
+
+
+\newtheorem{fact}{Fact}
+\renewcommand{\proofname}{Proof}
+
+\newtheorem{Theorem}{Theorem}[part]
+\newtheorem{Definition}[Theorem]{Definition}
+\newtheorem{Proposition}[Theorem]{Proposition}
+\newtheorem{Assumption}[Theorem]{Assumption}
+\newtheorem{Lemma}[Theorem]{Lemma}
+\newtheorem{Corollary}[Theorem]{Corollary}
+\newtheorem{Remark}[Theorem]{Remark}
+\newtheorem{Example}[Theorem]{Example}
+\newtheorem{Exercise}[Theorem]{Exercise}
+\newtheorem{Proof}{Proof}
+\newtheorem{Introduction}{Introduction}
+
+
+\renewcommand{\theDefinition}{\arabic{Definition}}
+\renewcommand{\theTheorem}{\arabic{Theorem}}
+\renewcommand{\theProposition}{\arabic{Proposition}}
+\renewcommand{\theAssumption}{\arabic{Assumption}}
+\renewcommand{\theCorollary}{\arabic{Corollary}}
+\renewcommand{\theLemma}{\arabic{Lemma}}
+\renewcommand{\theRemark}{\arabic{Remark}}
+\renewcommand{\theExample}{\arabic{Example}}
+\renewcommand{\theExercise}{\arabic{Exercise}}
+\renewcommand{\theequation}{\arabic{equation}}
+
+\def \Sum{\displaystyle\sum}
+\def \Prod{\displaystyle\prod}
+\def \Int{\displaystyle\int}
+\def \Frac{\displaystyle\frac}
+\def \Inf{\displaystyle\inf}
+\def \Sup{\displaystyle\sup}
+\def \Lim{\displaystyle\lim}
+\def \Liminf{\displaystyle\liminf}
+\def \Limsup{\displaystyle\limsup}
+\def \Max{\displaystyle\max}
+\def \Min{\displaystyle\min}
+
+\def \C{\mathbb{C}}
+\def \D{\mathbb{D}}
+\def \E{\mathbb{E}}
+\def \F{\mathbb{F}}
+\def \G{\mathbb{G}}
+\def \H{\mathbb{H}}
+\def \L{\mathbb{L}}
+\def \LL{\mathbb{L}}
+\def \M{\mathbb{M}}
+\def \N{\mathbb{N}}
+
+\def \P{\mathbb{P}}
+\def \Q{\mathbb{Q}}
+\def \R{\mathbb{R}}
+\def \T{\mathbb{T}}
+\def \V{\mathbb{V}}
+\def \Z{\mathbb{Z}}
+\def \s{\sigma}
+\def \t{\tau}
+\def \l{\lambda}
+
+\def \Var{\mathbb{V}ar}
+\def \Cov{\mathbb{C}ov}
+\def \Cor{\mathbb{C}or}
+
+\def\d{\mathbf{d}}
+
+\def \eps{\varepsilon}
+
+\def \1{{\bf 1}}
+
+\def \diag{\mbox{diag}}
+%\def \proof{{\noindent \bf Proof. }}
+\def \ep{\hbox{ }\hfill$\diamondsuit$}
+\def \no{\noindent}
+\def \loc{\mbox{loc}}
+
+
+\def\reff#1{{\rm(\ref{#1})}}
+
+%\addtolength{\oddsidemargin}{-0.1 \textwidth}
+%\addtolength{\textwidth}{0.2 \textwidth}
+%\addtolength{\topmargin}{-0.1 \textheight}
+%\addtolength{\textheight}{0.2 \textheight}
+
+\def\Ac{{\cal A}}
+\def\Bc{{\cal B}}
+\def\Cc{{\cal C}}
+\def\Dc{{\cal D}}
+\def\Ec{{\cal E}}
+\def\Fc{{\cal F}}
+\def\Gc{{\cal G}}
+\def\Hc{{\cal H}}
+\def\Ic{{\cal I}}
+\def\Jc{{\cal J}}
+\def\Kc{{\cal K}}
+\def\Lc{{\cal L}}
+\def\Mc{{\cal M}}
+\def\Nc{{\cal N}}
+\def\Oc{{\cal O}}
+\def\Pc{{\cal P}}
+\def\Qc{{\cal Q}}
+\def\Rc{{\cal R}}
+\def\Sc{{\cal S}}
+\def\Tc{{\cal T}}
+\def\Xc{{\cal X}}
+\def\Yc{{\cal Y}}
+\def\Zc{{\cal Z}}
+
+\def\be{\begin{eqnarray}}
+\def\ee{\end{eqnarray}}
+\def\b*{\begin{eqnarray*}}
+\def\e*{\end{eqnarray*}}
+
+\def\o{\omega}
+\def\O{\Omega}
+
+\def\esssup{\mathop{\rm ess\;sup}}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+\begin{flushleft}  
+$~~$
+
+\vspace{-20mm}
+
+$\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$NYU, Tandon School of Engineering
+\\
+$\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$MSFE6233
+\\
+$\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$Nizar Touzi
+\end{flushleft}
+
+\vspace{5mm}
+
+\begin{center}
+{\large\bf Homework 2  
+\\ ~~\\
+The Brownian motion}
+\end{center}
+
+\begin{Exercise}
+Let $W$ be a Brownian motion 
+\begin{enumerate}
+\item For $t\ge 0$ and $N\in\N$, denote $I_N
+:=
+\frac{t}{N}\sum_{k=1}^NW_{\frac{kt}{N}}
+$.
+\begin{enumerate}
+\item Justify that $I_N$ is a Gaussian random variable and provide its characteristics in closed form.
+\item What is the limit of the law of $I_N$ when $N\to\infty$?
+\item Justify that $I_N$ converges a.s. to the r.v. $X:=\int_0^t W_s ds$, and deduce the law of $X$.
+\item Compute directly the mean of $X$.
+\item Compute directly the variance of $X$. 
+\\
+Hint: start by writing $\E[X^2]=\E[\int_0^t\int_0^tW_sW_udu\,ds]$.
+\end{enumerate}
+\item Deduce the law of $Y:=\int_0^t W^2_s ds$.
+\begin{enumerate}
+\item Compute the mean of $Y$.
+\item Verify that the process $\{W^2_s-s,s\ge 0\}$ is a martingale.
+\item Deduce $\E[W_s^2W_u^2]$ for $s,u\in[0,t]$.
+\item Derive a closed form expression for the variance of $Y$. 
+\\
+Hint: start again by writing $\E[Y^2]=\E[\int_0^t\int_0^tW_s^2W_u^2du\,ds]$.
+\end{enumerate}
+\end{enumerate}
+
+\end{Exercise}
+\begin{Exercise}
+Let $W$ be a Brownian motion, and $\lambda\ge 0$.
+\begin{enumerate}
+\item Show that the process $\{M_t=e^{\sqrt{2\lambda}W_t-\lambda t},t\ge 0\}$ is a martingale.
+\item Denoting $H_b:=\inf\{s\ge 0: W_s=b\}$ for $b>0$, and $H_b^n:=n\wedge H_b$ for all $n\ge 1$, justify that $\E[M_{H^n_b}]=1$. 
+\item Justify that the sequence of random variables $(M_{H^n_b})_n$ is bounded by some constant independent of $n$, and  deduce that $\E[e^{-\lambda H_b}]=e^{-b\sqrt{2\lambda}}$.
+\end{enumerate}
+\end{Exercise}
+
+
+\end{document}
+
+\bigskip
+
+\begin{exo}
+Soit $T>0$ et $N\in\N^*$.
+\begin{enumerate}
+   \item Calculer
+   $\E\left(\sum_{k=1}^N(W_{\frac{kT}{N}}-W_{\frac{(k-1)T}{N}})^2\right)$.
+\item En déduire que $\E\left(\left[\sum_{k=1}^N(W_{\frac{kT}{N}}-W_{\frac{(k-1)T}{N}})^2-T\right]^2\right)=\frac{2T^2}{N}$.
+\end{enumerate}
+
+\end{exo}
+ 
+\bigskip
+
+\begin{exo} \textbf{Mouvement brownien géométrique}
+
+Soit $W$ un mouvement brownien standard. Le processus 
+$$
+S_t = S_0 e^{\mu t + \sigma W_t}
+$$ 
+s'appelle le mouvement brownien géométrique et constitue le modèle de base pour les fluctuations des cours boursiers. Le coefficient $\mu$ s'appelle  l'espérance du rendement et $\sigma$ la volatilité. Une question naturelle est l'estimation de $\mu$ et $\sigma$ à partir d'observations des cours. Supposons que les valeurs de $S_t$ sont observées aux dates $t_i:= \frac{i T}{n}$, $i=0,\dots,n$ pour $T$ et $n$ donnés. 
+\begin{enumerate}
+\item Dans un premier temps on suppose $\mu=0$. Montrer que 
+$$
+\hat \sigma^2:= \frac{1}{T} \sum_{k=1}^n \left(\log\frac{S_{t_k}}{S_{t_{k-1}}}\right)^2.
+$$
+est  un estimateur sans biais de  $\sigma^2$  (calculer $E[\hat \sigma^2]$). Calculer Var$[\hat \sigma^2]$ (on pourra se servir du r\'esultat de l'exercice 3). Montrer que cet estimateur est convergent si $n\to \infty$, même si $T$ reste constant. 
+\item On se place maintenant dans le cas général $\mu \neq 0$. Montrer que 
+$$
+\hat \mu:= \frac{1}{T}\log\frac{S_T}{S_0}
+$$
+est un estimateur sans biais de $\mu$, qui est convergent si $T\to\infty$. 
+ Conclure sur la difficulté relative d'estimation de $\mu$ et $\sigma^2$.
+\end{enumerate} 
+\end{exo}
+
+
+
+\end{document}
+
+
+

@@ -1,0 +1,3176 @@
+\documentclass[11pt]{article}
+
+% ============================================================
+% Packages
+% ============================================================
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools,amsthm}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{cleveref}
+
+% ============================================================
+% Hyperref setup
+% ============================================================
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=blue!60!black,
+  urlcolor=blue!60!black
+}
+
+% ============================================================
+% Macros
+% ============================================================
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Pbb}{\mathbb{P}}
+\newcommand{\Qbb}{\mathbb{Q}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\1}{\mathbf{1}}
+
+% Stochastic calc notations
+\newcommand{\Ito}{It\^o}
+\newcommand{\bracket}[2]{\langle #1,#2\rangle}
+\newcommand{\qvar}[1]{\langle #1\rangle}
+
+% ============================================================
+% Theorem environments
+% ============================================================
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ============================================================
+% Minimal lecture header helpers
+% ============================================================
+\newcommand{\lecture}[2]{%
+\section{Lecture #1 --- #2}%
+}
+\newcommand{\lecturesummary}[1]{%
+\begin{center}
+\begin{minipage}{0.95\linewidth}
+\small\textbf{Summary.} #1
+\end{minipage}
+\end{center}
+\vspace{0.5em}
+}
+
+% ============================================================
+% Title
+% ============================================================
+\title{Stochastic Calculus \& Option Pricing --- Synthetic Notes}
+\author{Nathan Sauldubois}
+\date{\today}
+
+\begin{document}
+\maketitle
+\vspace{-0.8em}
+
+\noindent\textbf{How to use these notes.}
+\begin{itemize}[leftmargin=1.4em, itemsep=0.2em]
+  \item These are \emph{synthetic} lecture notes: definitions, key results, and the computations you actually use.
+  \item Each lecture ends with a short checklist: ``what you must be able to do''.
+  \item Notation: all processes are defined on a filtered probability space $(\Omega,\F,(\F_t)_{t\ge 0},\Pbb)$ satisfying the usual conditions.
+\end{itemize}
+
+\tableofcontents
+\bigskip
+
+% ===========================================================
+
+\section{Lecture 1 --- Probability refresher and core mathematical tools}
+
+\lecturesummary{Random variables and their laws; CDFs and densities; moments,
+variance, and covariance; dominated convergence; LLN and CLT; characteristic
+functions; information and conditional expectation; Gaussian conditioning;
+filtrations and martingales; and the differential-calculus formulas used later.}
+
+\paragraph{Reference.}
+S.~E. Shreve, \textit{Stochastic Calculus for Finance II}, Chapters~1--2.
+
+% ============================================================
+\subsection{Random variables, laws, CDFs, and densities}
+
+\paragraph{Random variable and law.}
+On a probability space $(\Omega,\F,\Pbb)$, a real random variable is a
+measurable map $X:(\Omega,\F)\to(\R,\mathcal B(\R))$. Its law is the
+probability measure
+\[
+\Pbb_X(A)=\Pbb(X\in A),
+\qquad A\in\mathcal B(\R).
+\]
+The random variable maps states to numbers; its law records the probabilities
+of those numbers.
+
+\paragraph{CDF and density.}
+The cumulative distribution function of $X$ is
+\[
+F_X(x)=\Pbb(X\le x).
+\]
+Every CDF is nondecreasing and right-continuous, with limits $0$ at
+$-\infty$ and $1$ at $+\infty$. For $a<b$,
+\[
+\Pbb(a<X\le b)=F_X(b)-F_X(a).
+\]
+If $X$ has density $f_X$, then
+\[
+F_X(x)=\int_{-\infty}^x f_X(u)\dd u,
+\qquad
+\Pbb(a<X\le b)=\int_a^b f_X(u)\dd u,
+\]
+and $f_X=F_X'$ wherever the CDF is differentiable. A law and a CDF always
+exist; a density need not exist.
+
+\paragraph{Joint and marginal laws.}
+The joint law of $(X,Y)$ contains both marginal laws and their dependence.
+In the discrete case,
+\[
+p_X(x)=\sum_y p_{X,Y}(x,y),
+\qquad
+p_Y(y)=\sum_x p_{X,Y}(x,y),
+\]
+whereas for a joint density,
+\[
+f_X(x)=\int_{\R}f_{X,Y}(x,y)\dd y,
+\qquad
+f_Y(y)=\int_{\R}f_{X,Y}(x,y)\dd x.
+\]
+Independence is equivalent to factorization of the joint law:
+$p_{X,Y}=p_Xp_Y$ or $f_{X,Y}=f_Xf_Y$.
+
+\paragraph{Common one-dimensional laws.}
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Law & Parameters & $\E[X]$ & $\Var(X)$\\
+\midrule
+Bernoulli & $p$ & $p$ & $p(1-p)$\\
+Binomial & $n,p$ & $np$ & $np(1-p)$\\
+Poisson & $\lambda$ & $\lambda$ & $\lambda$\\
+Uniform & $[a,b]$ & $(a+b)/2$ & $(b-a)^2/12$\\
+Exponential & rate $\lambda$ & $1/\lambda$ & $1/\lambda^2$\\
+Gaussian & $\mu,\sigma^2$ & $\mu$ & $\sigma^2$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Mass functions and densities to recognize.}
+For the discrete laws,
+\begin{align*}
+X\sim\operatorname{Bernoulli}(p):&\quad
+\Pbb(X=x)=p^x(1-p)^{1-x},\quad x\in\{0,1\},\\
+X\sim\operatorname{Binomial}(n,p):&\quad
+\Pbb(X=k)=\binom nkp^k(1-p)^{n-k},\quad k=0,\ldots,n,\\
+X\sim\operatorname{Poisson}(\lambda):&\quad
+\Pbb(X=k)=e^{-\lambda}\frac{\lambda^k}{k!},\quad k\in\N.
+\end{align*}
+For the continuous laws,
+\begin{align*}
+X\sim\operatorname{Unif}[a,b]:&\quad
+f_X(x)=\frac1{b-a}\1_{[a,b]}(x),\\
+X\sim\operatorname{Exp}(\lambda):&\quad
+f_X(x)=\lambda e^{-\lambda x}\1_{[0,\infty)}(x),\\
+X\sim\mathcal N(\mu,\sigma^2):&\quad
+f_X(x)=\frac1{\sigma\sqrt{2\pi}}
+\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).
+\end{align*}
+
+% ============================================================
+\subsection{Expectation, moments, variance, and covariance}
+
+\paragraph{Expectation of a transformation.}
+If the relevant sum or integral is finite, then
+\[
+\E[h(X)]
+=\sum_x h(x)\Pbb(X=x)
+\quad\text{or}\quad
+\E[h(X)]=\int_{\R}h(x)f_X(x)\dd x.
+\]
+The $k$th moment is $\E[X^k]$. Integrability means
+$\E[|X|]<\infty$, and $\E[\1_A]=\Pbb(A)$.
+
+\paragraph{Essential expectation properties.}
+For integrable $X,Y$ and constants $a,b$,
+\begin{align*}
+\E[aX+bY]&=a\E[X]+b\E[Y],\\
+X\le Y&\Longrightarrow \E[X]\le\E[Y],\\
+|\E[X]|&\le\E[|X|].
+\end{align*}
+Linearity does not require independence.
+
+\paragraph{Variance and covariance.}
+For square-integrable variables,
+\[
+\Var(X)=\E[(X-\E[X])^2]
+=\E[X^2]-\E[X]^2,
+\qquad
+\operatorname{SD}(X)=\sqrt{\Var(X)},
+\]
+and
+\[
+\Cov(X,Y)=\E[XY]-\E[X]\E[Y].
+\]
+The identities used most often are
+\begin{align*}
+\Var(aX+b)&=a^2\Var(X),\\
+\Var(X+Y)&=\Var(X)+\Var(Y)+2\Cov(X,Y),\\
+\Var\!\left(\sum_{k=1}^nX_k\right)
+&=\sum_{k=1}^n\Var(X_k)
+  +2\sum_{i<j}\Cov(X_i,X_j).
+\end{align*}
+Independence implies zero covariance, but the converse is false in general.
+For independent square-integrable variables, the variance of a sum is the
+sum of the variances.
+
+\begin{theorem}[Dominated Convergence Theorem]
+Suppose $X_n\to X$ almost surely and there is an integrable random variable
+$Y$ such that $|X_n|\le Y$ almost surely for every $n$. Then $X$ is
+integrable and
+\[
+\E[|X_n-X|]\longrightarrow0,
+\qquad
+\E[X_n]\longrightarrow\E[X].
+\]
+\end{theorem}
+
+\begin{remark}
+Dominated convergence is the standard tool for interchanging a limit and an
+expectation. Pointwise convergence alone is not sufficient; the integrable
+dominating variable controls the tails uniformly in $n$.
+\end{remark}
+
+% ============================================================
+\subsection{Sample moments, LLN, and CLT}
+
+For observations $X_1,\ldots,X_n$, define
+\[
+\overline X_n=\frac1n\sum_{i=1}^nX_i,
+\qquad
+v_n=\frac1n\sum_{i=1}^n(X_i-\overline X_n)^2,
+\qquad
+s_n^2=\frac{n}{n-1}v_n.
+\]
+Here $v_n$ is the empirical variance and $s_n^2$ is its usual unbiased
+version under i.i.d. sampling with finite variance.
+
+\begin{theorem}[Law of Large Numbers]
+If $(X_i)$ are i.i.d. and $\E[|X_1|]<\infty$, then
+\[
+\overline X_n\xrightarrow[n\to\infty]{\Pbb}\mu=\E[X_1].
+\]
+\end{theorem}
+
+\begin{theorem}[Central Limit Theorem]
+If, in addition, $0<\sigma^2=\Var(X_1)<\infty$, then
+\[
+\frac{\sqrt n(\overline X_n-\mu)}{\sigma}
+\Rightarrow\mathcal N(0,1).
+\]
+Thus $\overline X_n$ has approximate standard deviation
+$\sigma/\sqrt n$ for large $n$.
+\end{theorem}
+
+The LLN says that the estimation error vanishes; the CLT gives its
+$n^{-1/2}$ scale and approximate Gaussian shape.
+
+% ============================================================
+\subsection{Characteristic functions}
+
+\paragraph{Definition and basic properties.}
+The characteristic function of $X$ is
+\[
+\varphi_X(u)=\E[e^{iuX}],
+\qquad u\in\R.
+\]
+It always exists because $|e^{iuX}|=1$. Moreover,
+\[
+\varphi_X(0)=1,
+\qquad
+|\varphi_X(u)|\le1,
+\qquad
+\varphi_{aX+b}(u)=e^{iub}\varphi_X(au).
+\]
+The characteristic function uniquely determines the law. If
+$\E[|X|^k]<\infty$, then it can be differentiated at the origin and
+\[
+\varphi_X^{(k)}(0)=i^k\E[X^k].
+\]
+
+\paragraph{Independent sums.}
+If $X$ and $Y$ are independent, then
+\[
+\varphi_{X+Y}(u)=\varphi_X(u)\varphi_Y(u).
+\]
+This turns convolution of laws into multiplication of functions.
+
+\paragraph{Formulas to know.}
+\begin{align*}
+X\sim\operatorname{Bernoulli}(p):&\quad
+\varphi_X(u)=1-p+pe^{iu},\\
+X\sim\operatorname{Poisson}(\lambda):&\quad
+\varphi_X(u)=\exp\!\bigl(\lambda(e^{iu}-1)\bigr),\\
+X\sim\operatorname{Exp}(\lambda):&\quad
+\varphi_X(u)=\frac{\lambda}{\lambda-iu},\\
+X\sim\mathcal N(\mu,\sigma^2):&\quad
+\varphi_X(u)=\exp\!\left(i\mu u-\frac12\sigma^2u^2\right).
+\end{align*}
+
+For $Z\sim\mathcal N(0,1)$, differentiation under the integral followed by
+integration by parts gives
+\[
+\varphi_Z'(u)=-u\varphi_Z(u),
+\qquad
+\varphi_Z(0)=1.
+\]
+Hence $\varphi_Z(u)=e^{-u^2/2}$; writing $X=\mu+\sigma Z$ gives the general
+Gaussian formula.
+
+% ============================================================
+\subsection{Information, measurability, and conditional expectation}
+
+\paragraph{$\sigma$-algebras as information.}
+A sub-$\sigma$-algebra $\mathcal G\subseteq\F$ represents the events that
+can be decided from the available information. A variable $Z$ is
+$\mathcal G$-measurable when its value can be determined from that
+information. The information revealed by a signal $Y$ is $\sigma(Y)$.
+
+On a finite space, $\mathcal G$ is generated by a partition
+$A_1,\ldots,A_m$. A variable is $\mathcal G$-measurable if and only if it is
+constant on every atom $A_j$. Equivalently,
+\[
+Z\text{ is }\sigma(Y)\text{-measurable}
+\quad\Longleftrightarrow\quad
+Z=g(Y)
+\]
+for some measurable $g$.
+
+\paragraph{Conditional probability and conditional laws.}
+For events $A,B$ with $\Pbb(B)>0$,
+\[
+\Pbb(A\mid B)=\frac{\Pbb(A\cap B)}{\Pbb(B)}.
+\]
+For discrete variables and $\Pbb(Y=y)>0$,
+\[
+\Pbb(X=x\mid Y=y)
+=\frac{\Pbb(X=x,Y=y)}{\Pbb(Y=y)}.
+\]
+For a joint density and $f_Y(y)>0$,
+\[
+f_{X\mid Y}(x\mid y)
+=\frac{f_{X,Y}(x,y)}{f_Y(y)},
+\qquad
+f_Y(y)=\int_{\R}f_{X,Y}(x,y)\dd x.
+\]
+
+\paragraph{Definition of conditional expectation.}
+For $X\in L^1$ and $\mathcal G\subseteq\F$, the conditional expectation
+$\E[X\mid\mathcal G]$ is the almost-surely unique random variable $Z$ such
+that
+\[
+Z\text{ is }\mathcal G\text{-measurable},
+\qquad
+\int_AZ\dd\Pbb=\int_AX\dd\Pbb
+\quad\text{for every }A\in\mathcal G.
+\]
+It is the prediction of $X$ based only on the information in $\mathcal G$.
+Conditioning on $Y$ means conditioning on $\sigma(Y)$:
+\[
+\E[X\mid Y]=\E[X\mid\sigma(Y)].
+\]
+
+\paragraph{Finite-partition formula.}
+If $\mathcal G=\sigma(A_1,\ldots,A_m)$, where the $A_j$ are partition atoms
+with positive probability, then
+\[
+\E[X\mid\mathcal G]
+=\sum_{j=1}^m
+\frac{\E[X\1_{A_j}]}{\Pbb(A_j)}\1_{A_j}
+=\sum_{j=1}^m\E[X\mid A_j]\1_{A_j}.
+\]
+Conditional expectation is therefore the average of $X$ inside each
+information set.
+
+\paragraph{Formula for $\E[h(X)\mid Y]$: discrete case.}
+Define, for every $y$ with $\Pbb(Y=y)>0$,
+\begin{align*}
+m(y)
+&=\E[h(X)\mid Y=y]\\
+&=\sum_xh(x)\Pbb(X=x\mid Y=y)\\
+&=\frac{\sum_xh(x)\Pbb(X=x,Y=y)}{\Pbb(Y=y)}.
+\end{align*}
+Then
+\[
+\boxed{\E[h(X)\mid Y]=m(Y).}
+\]
+
+\paragraph{Formula for $\E[h(X)\mid Y]$: density case.}
+For $f_Y(y)>0$, define
+\begin{align*}
+m(y)
+&=\E[h(X)\mid Y=y]\\
+&=\int_{\R}h(x)f_{X\mid Y}(x\mid y)\dd x\\
+&=\frac{\int_{\R}h(x)f_{X,Y}(x,y)\dd x}
+        {\int_{\R}f_{X,Y}(x,y)\dd x}.
+\end{align*}
+Again,
+\[
+\boxed{\E[h(X)\mid Y]=m(Y).}
+\]
+The final substitution $y=Y$ is essential: a conditional expectation is a
+random variable, not merely a number indexed by $y$.
+
+\paragraph{Essential conditional-expectation properties.}
+For integrable variables, constants $a,b$, and
+$\mathcal H\subseteq\mathcal G\subseteq\F$,
+\begin{align*}
+\E[aX+bY\mid\mathcal G]
+&=a\E[X\mid\mathcal G]+b\E[Y\mid\mathcal G],\\
+X\le Y
+&\Longrightarrow
+\E[X\mid\mathcal G]\le\E[Y\mid\mathcal G],\\
+Z\text{ $\mathcal G$-measurable}
+&\Longrightarrow
+\E[ZX\mid\mathcal G]=Z\E[X\mid\mathcal G],\\
+X\text{ $\mathcal G$-measurable}
+&\Longrightarrow
+\E[X\mid\mathcal G]=X,\\
+X\text{ independent of }\mathcal G
+&\Longrightarrow
+\E[X\mid\mathcal G]=\E[X],\\
+\E[\E[X\mid\mathcal G]\mid\mathcal H]
+&=\E[X\mid\mathcal H].
+\end{align*}
+In particular,
+\[
+\E[\E[X\mid\mathcal G]]=\E[X].
+\]
+For convex $\phi$, conditional Jensen gives
+\[
+\phi(\E[X\mid\mathcal G])
+\le\E[\phi(X)\mid\mathcal G]
+\]
+whenever the quantities are integrable.
+
+\paragraph{Gaussian conditioning.}
+If $(X,Y)$ is jointly Gaussian, with standard deviations
+$\sigma_X,\sigma_Y>0$ and correlation $\rho$, then
+\[
+X\mid(Y=y)\sim\mathcal N\!\left(
+\mu_X+\rho\frac{\sigma_X}{\sigma_Y}(y-\mu_Y),
+\;\sigma_X^2(1-\rho^2)
+\right).
+\]
+Consequently,
+\[
+\E[X\mid Y]
+=\mu_X+\rho\frac{\sigma_X}{\sigma_Y}(Y-\mu_Y),
+\qquad
+\Var(X\mid Y)=\sigma_X^2(1-\rho^2).
+\]
+The conditional mean is affine in the observed signal, and the residual
+variance decreases as $|\rho|$ increases.
+
+% ============================================================
+\subsection{Processes, filtrations, and martingales}
+
+\paragraph{Processes and filtrations.}
+A discrete-time stochastic process is a sequence $(X_n)_{n\ge0}$ of random
+variables on the same probability space. A filtration is an increasing
+family of $\sigma$-algebras,
+\[
+\F_0\subseteq\F_1\subseteq\F_2\subseteq\cdots,
+\]
+representing information accumulated through time. The natural filtration
+of $X$ is
+\[
+\F_n^X=\sigma(X_0,\ldots,X_n).
+\]
+
+A process is adapted if $X_n$ is $\F_n$-measurable for every $n$.
+Adaptedness is the no-look-ahead requirement.
+
+\paragraph{Random walks.}
+If
+\[
+S_n=S_0+\sum_{k=1}^n\xi_k,
+\]
+where the increments are i.i.d. with mean $m$ and variance $\sigma^2$, then
+\[
+\E[S_n]=S_0+nm,
+\qquad
+\Var(S_n)=n\sigma^2.
+\]
+
+\paragraph{Martingales.}
+An integrable adapted process $(M_n)$ is a martingale if
+\[
+\E[M_{n+1}\mid\F_n]=M_n
+\qquad\text{for every }n.
+\]
+For the random walk above,
+\[
+M_n=S_n-nm
+\]
+is a martingale. For independent symmetric $\pm1$ increments,
+$S_n^2-n$ is also a martingale. A martingale combines three requirements:
+integrability, adaptation, and the conditional fair-game identity.
+
+% ============================================================
+\subsection{Differential-calculus review}
+
+\paragraph{One-variable derivative and Taylor expansion.}
+For $g:\R\to\R$,
+\[
+g'(x)=\lim_{h\to0}\frac{g(x+h)-g(x)}{h}.
+\]
+If $g$ is twice differentiable near $x$, then
+\[
+g(x+h)=g(x)+g'(x)h+\frac12g''(x)h^2+o(h^2).
+\]
+
+\paragraph{Gradient and Hessian.}
+For $f:\R^d\to\R$,
+\[
+\nabla f(x)=
+\begin{pmatrix}
+\partial_1f(x)\\ \vdots\\ \partial_df(x)
+\end{pmatrix},
+\qquad
+\nabla^2f(x)=\bigl(\partial_{ij}f(x)\bigr)_{1\le i,j\le d}.
+\]
+The gradient gives first-order sensitivities; the Hessian records curvature
+and interactions. The second-order multivariable expansion is
+\[
+f(x+h)=f(x)+\nabla f(x)^\top h
++\frac12h^\top\nabla^2f(x)h+o(\|h\|^2).
+\]
+
+\paragraph{Multivariable chain rule.}
+If $x(t)\in\R^d$ and $f$ are differentiable, then
+\[
+\frac{\dd}{\dd t}f(x(t))
+=\nabla f(x(t))^\top x'(t).
+\]
+In particular, for $V=V(t,s)$ and a differentiable path $S(t)$,
+\[
+\frac{\dd}{\dd t}V(t,S(t))
+=V_t(t,S(t))+V_s(t,S(t))S'(t).
+\]
+The second-order Taylor term involving $V_{ss}$ will be essential once the
+underlying path is Brownian rather than differentiable.
+
+% ============================================================
+\subsection*{Lecture 1 checklist}
+
+You should be able to:
+\begin{itemize}[leftmargin=1.5em,itemsep=0.15em]
+  \item pass between a law, a CDF, a density, and interval probabilities;
+  \item compute $\E[h(X)]$, moments, variances, covariances, and variances of sums;
+  \item state when dominated convergence allows a limit to pass through $\E$;
+  \item distinguish the conclusions of the LLN and the CLT;
+  \item compute and use characteristic functions, especially for independent sums;
+  \item identify the information in $\sigma(Y)$ and test measurability on partition atoms;
+  \item compute $\E[h(X)\mid Y]$ in both discrete and density models;
+  \item use linearity, known factors, independence, monotonicity, Jensen, and the tower rule;
+  \item apply the Gaussian conditioning formula;
+  \item verify adaptation and the martingale property;
+  \item compute derivatives, gradients, Hessians, Taylor expansions, and chain rules.
+\end{itemize}
+
+% ============================================================
+
+\section{Lecture 2 --- Brownian Motion, Quadratic Variation, and GBM}
+
+\paragraph{References}
+% ============================================================
+
+\begin{itemize}[leftmargin=1.4em]
+
+\item \textit{Stochastic Calculus for Finance II: Continuous-Time Models}, S. E. Shreve, Chapter~3, pp.~83-117
+
+\item \textit{Brownian Motion and Stochastic Calculus}, I. Karatzas and S. E. Shreve, Chapter~2, pp.~47-126
+
+\end{itemize}
+
+
+\subsection{From Discrete Random Walks to Brownian Motion}
+
+\paragraph{Simple symmetric random walk.}
+Let $(\varepsilon_k)_{k\ge1}$ be i.i.d.\ with
+$\Pbb(\varepsilon_k=\pm1)=\tfrac12$, and define
+\[
+S_0=0,
+\qquad
+S_n=\sum_{k=1}^n \varepsilon_k .
+\]
+Then $(S_n)$ is a discrete-time martingale with independent increments,
+$\E[S_n]=0$ and $\Var(S_n)=n$.
+
+\paragraph{Diffusive scaling.}
+Introduce a time step $1/n$ and define the rescaled process
+\[
+W^{(n)}(t)=\frac{1}{\sqrt{n}}\,S_{\lfloor nt\rfloor},
+\qquad t\ge0,
+\]
+with linear interpolation.
+By the CLT, increments of $W^{(n)}$ over intervals of length $t-s$
+are approximately Gaussian with variance $t-s$.
+
+\paragraph{Donsker invariance principle (informal).}
+As $n\to\infty$, $W^{(n)}$ converges in distribution to a continuous-time
+process $W$, called \emph{Brownian motion}.
+This result explains why Brownian motion is the universal
+continuous-time limit of random walks.
+
+\subsection{Definition and Basic Properties of Brownian Motion}
+
+\paragraph{Definition.}
+A process $(W_t)_{t\ge0}$ is a \emph{standard Brownian motion} if:
+\begin{itemize}
+  \item $W_0=0$,
+  \item it has independent increments,
+  \item for $0\le s<t$, $W_t-W_s\sim\mathcal N(0,t-s)$,
+  \item paths are continuous almost surely.
+\end{itemize}
+
+\paragraph{Gaussian process viewpoint.}
+Brownian motion is a centered Gaussian process fully characterized by
+\[
+\Cov(W_s,W_t)=\min(s,t).
+\]
+In particular, for $s<t$,
+\[
+W_t=W_s+(W_t-W_s),
+\]
+where $W_s$ and $W_t-W_s$ are independent.
+
+\paragraph{Martingale property.}
+With respect to its natural filtration $\mathcal F_t=\sigma(W_s:s\le t)$,
+Brownian motion is a martingale:
+\[
+\E[W_t\mid\mathcal F_s]=W_s,\qquad s\le t.
+\]
+
+\subsection{Markov and Strong Markov Properties}
+
+\paragraph{Markov property.}
+Brownian motion is Markov: conditionally on $W_s$,
+the future is independent of the past,  if $t \geq s$, 
+\[
+\Pbb(W_t\in A\mid\mathcal F_s)=\Pbb(W_t\in A\mid W_s).
+\]
+Equivalently,
+\[
+W_t\mid W_s=x \sim \mathcal N(x,t-s).
+\]
+
+\paragraph{Strong Markov property.}
+Let $\tau$ be a stopping time.
+Conditionally on $\mathcal F_\tau$, the shifted process
+\[
+(W_{\tau+t}-W_\tau)_{t\ge0}
+\]
+is a Brownian motion independent of $\mathcal F_\tau$.
+This is crucial for hitting times, barriers, and American-style features.
+
+\subsection{Reflection Principle and Hitting Times}
+
+\paragraph{Running maximum.}
+Define the running maximum
+\[
+M_t=\sup_{0\le s\le t} W_s,
+\]
+and the hitting time of level $a$:
+\[
+\tau_a=\inf\{t\ge0:\ W_t=a\}.
+\]
+
+\paragraph{Reflection principle.}
+For $a>0$ and $t>0$,
+\[
+\Pbb(M_t\ge a)=2\,\Pbb(W_t\ge a).
+\]
+More generally, for $w\le a$,
+\[
+\Pbb(M_t>a,\ W_t<w)=\Pbb(W_t>2a-w).
+\]
+
+\paragraph{Interpretation.}
+Among paths that hit level $a$ before time $t$,
+reflecting the path after the first hitting time preserves Wiener measure.
+This converts path-dependent events into Gaussian tail probabilities.
+
+\paragraph{Consequence.}
+Brownian motion hits every level almost surely:
+\[
+\Pbb(\tau_a<\infty)=1,
+\qquad a\in\R.
+\]
+
+\subsection{Pathwise Regularity and Irregularity}
+
+\paragraph{Nowhere differentiability.}
+Almost surely, Brownian paths are nowhere differentiable.
+
+\paragraph{Oscillations.}
+For every $t\ge0$, almost surely,
+\[
+\limsup_{h\downarrow0}\frac{W_{t+h}-W_t}{\sqrt{h}}=+\infty,
+\qquad
+\liminf_{h\downarrow0}\frac{W_{t+h}-W_t}{\sqrt{h}}=-\infty.
+\]
+
+\paragraph{Hölder regularity.}
+For every $\alpha<\tfrac12$, Brownian motion is locally $\alpha$-Hölder,
+but it is not $\tfrac12$-Hölder.
+
+\subsection{Quadratic Variation}
+
+\paragraph{Definition.}
+For a partition $\pi=\{0=t_0<\cdots<t_n=T\}$, define
+\[
+[X]^\pi_T=\sum_{k=0}^{n-1}(X_{t_{k+1}}-X_{t_k})^2.
+\]
+If this converges as $|\pi|\to0$, the limit is the quadratic variation $[X]_T$.
+
+\paragraph{Finite variation vs.\ Brownian motion.}
+If $X_t=\int_0^t v_s ds$, then $[X]_T=0$.
+In contrast, for Brownian motion,
+\[
+[W]_T=T.
+\]
+
+\paragraph{Key martingale.}
+Quadratic variation explains why
+\[
+W_t^2-t
+\]
+is a martingale.
+This is the simplest manifestation of Itô calculus.
+
+\paragraph{Quadratic covariation.}
+For processes $X,Y$,
+\[
+[X,Y]_T=\lim_{\pi}\sum_k (X_{t_{k+1}}-X_{t_k})(Y_{t_{k+1}}-Y_{t_k}).
+\]
+If $A$ has finite variation, then $[A,W]=0$.
+
+\subsection{Heuristic It\^o Rules}
+
+Brownian increments satisfy the scaling:
+\[
+\Delta W = O(\sqrt{\Delta t}).
+\]
+As a bookkeeping device,
+\[
+(dW_t)^2=dt,
+\qquad
+dW_t\,dt=0,
+\qquad
+(dt)^2=0.
+\]
+These rules encode which discrete sums survive in the limit.
+
+\subsection{Geometric Brownian Motion (GBM)}
+
+\paragraph{Motivation.}
+Additive models allow negative prices and ignore scale effects.
+Instead, model relative changes:
+\[
+\frac{dS_t}{S_t}=\mu\,dt+\sigma\,dW_t.
+\]
+
+\paragraph{Explicit solution.}
+The solution is
+\[
+S_t=S_0\exp\!\Big(
+(\mu-\tfrac12\sigma^2)t+\sigma W_t
+\Big),
+\]
+so $S_t$ is lognormally distributed.
+
+\paragraph{Moments.}
+\[
+\E[S_t]=S_0 e^{\mu t},
+\qquad
+\Var(S_t)=S_0^2 e^{2\mu t}(e^{\sigma^2 t}-1).
+\]
+
+\paragraph{Volatility scaling.}
+Log-returns over $\Delta t$ have variance $\sigma^2\Delta t$,
+which justifies the $\sqrt{\Delta t}$ rule.
+
+\subsection{Stopping Times and Optional Stopping}
+
+\paragraph{Stopped process.}
+For a stopping time $\tau$ and a martingale $(M_t)$, define
+\[
+M_t^\tau=M_{t\wedge\tau}.
+\]
+Then $(M_t^\tau)$ is again a martingale.
+
+\paragraph{Optional stopping (safe version).}
+If $\tau$ is bounded, then
+\[
+\E[M_\tau]=\E[M_0].
+\]
+In general, $\tau<\infty$ a.s.\ is not sufficient;
+integrability or uniform integrability is required.
+
+\paragraph{Example.}
+For Brownian motion and $\tau_a=\inf\{t:\ W_t=a\}$,
+$\E[\tau_a]=\infty$ and $W_{\tau_a}=a$,
+so $\E[W_{\tau_a}]\neq\E[W_0]$.
+Optional stopping applies only to $t\wedge\tau_a$.
+
+\medskip
+\subsection{Multidimensional Brownian Motion}
+
+\paragraph{Definition.}
+A $d$-dimensional Brownian motion is a vector-valued process
+\[
+W_t=(W_t^1,\dots,W_t^d),\qquad t\ge 0,
+\]
+such that:
+\begin{itemize}
+  \item $W_0=0\in\R^d$,
+  \item it has independent increments,
+  \item for $0\le s<t$, the increment $W_t-W_s$ is multivariate Gaussian
+  with mean $0$ and covariance matrix $(t-s)I_d$,
+  \item paths are continuous almost surely.
+\end{itemize}
+
+Equivalently, the components $(W^1,\dots,W^d)$ are independent
+one-dimensional Brownian motions.
+
+\paragraph{Gaussian characterization.}
+Multidimensional Brownian motion is a centered Gaussian process with
+\[
+\Cov(W_s^i,W_t^j)=\delta_{ij}\min(s,t),
+\qquad 1\le i,j\le d,
+\]
+where $\delta_{ij}$ is the Kronecker symbol.
+
+\paragraph{Independent vs.\ correlated Brownian motions.}
+More generally, one may consider a Brownian motion with covariance matrix
+$\Sigma\in\R^{d\times d}$ (symmetric, positive semidefinite), defined by
+\[
+\Cov(W_s,W_t)=\min(s,t)\,\Sigma.
+\]
+In this case,
+\[
+\dd[W^i,W^j]_t=\Sigma_{ij}\,\dd t.
+\]
+Any such process can be written as
+\[
+W_t = B\,\widetilde W_t,
+\]
+where $\widetilde W$ is a standard $d$-dimensional Brownian motion
+and $B$ satisfies $BB^\top=\Sigma$ (e.g.\ Cholesky factorization).
+
+\paragraph{Quadratic variation and covariation.}
+For a $d$-dimensional Brownian motion $W$,
+\[
+[W^i]_t = t,
+\qquad
+[W^i,W^j]_t = 0 \quad (i\neq j)
+\]
+in the independent case, and more generally
+\[
+[W]_t = t\,\Sigma,
+\]
+where $[W]_t$ denotes the matrix-valued quadratic variation.
+
+\paragraph{It\^o rules (multidimensional mnemonic).}
+For independent components,
+\[
+(\dd W_t^i)^2=\dd t,
+\qquad
+\dd W_t^i\,\dd W_t^j=0 \ (i\neq j),
+\qquad
+\dd W_t^i\,\dd t=0,
+\qquad
+(\dd t)^2=0.
+\]
+With correlation matrix $\Sigma$, this becomes
+\[
+\dd W_t^i\,\dd W_t^j=\Sigma_{ij}\,\dd t.
+\]
+
+\paragraph{Preview.}
+In higher dimension, stochastic calculus keeps the same structure:
+\emph{drift terms}, \emph{martingale terms}, and \emph{quadratic variation}.
+Only the bookkeeping becomes matrix-valued.
+This naturally leads to the multidimensional It\^o formula
+and to Girsanov’s theorem in vector form.
+
+
+%
+%% ============================================================
+%% =====================================================
+%\section{Lecture 3 --- The Itô Stochastic Integral}
+%% =====================================================
+%
+%\paragraph{References}
+%% ============================================================
+%
+%\begin{itemize}[leftmargin=1.4em]
+%
+%\item \textit{Arbitrage Theory in Continuous Time}, T. Björk, Chapter~4, pp.~40-48
+%
+%\item \textit{Stochastic Calculus for Finance II: Continuous-Time Models},  
+%S. E. Shreve  
+%, Chapter~4, pp.~125-152
+%
+%\item \textit{Brownian Motion and Stochastic Calculus},  
+%I. Karatzas and S. E. Shreve  
+%, Chapter~3, pp.~128-148
+%
+%\end{itemize}
+%
+%
+%\subsection{Quadratic variation of Brownian motion}
+%
+%Let $(W_t)_{t\ge 0}$ be a one-dimensional Brownian motion.
+%
+%\begin{theorem}[Quadratic variation of Brownian motion]
+%For any $T>0$ and any sequence of partitions
+%\(
+%\pi=\{0=t_0<\cdots<t_n=T\}
+%\)
+%with mesh $|\pi|\to 0$,
+%\[
+%\sum_{i=0}^{n-1} (W_{t_{i+1}}-W_{t_i})^2
+%\;\longrightarrow\;
+%T
+%\quad \text{in probability (and in }L^2\text{)}.
+%\]
+%\end{theorem}
+%
+%We write $[W]_t = t$.  
+%This identity underlies all second-order terms in stochastic calculus and explains why classical Riemann--Stieltjes integration fails for Brownian motion.
+%
+%\subsection{Predictable integrands and admissibility}
+%
+%Let $(\mathcal F_t)_{t\ge0}$ be the augmented filtration generated by $W$.
+%
+%\begin{definition}[Predictable process]
+%A process $(\phi_t)_{t\in[0,T]}$ is called predictable if it can be approximated (in a suitable sense) by left-continuous step processes of the form
+%\[
+%\phi_t = \sum_{i=0}^{n-1} \phi_{t_i}\mathbf 1_{(t_i,t_{i+1}]}(t),
+%\qquad \phi_{t_i}\in\mathcal F_{t_i}.
+%\]
+%\end{definition}
+%
+%Predictability formalizes the \emph{no-anticipation} principle: trading decisions are made using current information only.
+%
+%\begin{definition}[Square-integrable integrand]
+%A predictable process $\phi$ is said to be Itô-integrable on $[0,T]$ if
+%\[
+%\E\!\left[\int_0^T \phi_t^2\,dt\right] < \infty.
+%\]
+%\end{definition}
+%
+%\subsection{Definition of the Itô integral}
+%
+%\begin{definition}[Itô integral for step processes]
+%For a simple predictable process
+%\[
+%\phi_t=\sum_{i=0}^{n-1}\phi_{t_i}\mathbf 1_{(t_i,t_{i+1}]}(t),
+%\]
+%the Itô integral is defined by
+%\[
+%\int_0^T \phi_t\,dW_t
+%:=
+%\sum_{i=0}^{n-1} \phi_{t_i}\big(W_{t_{i+1}}-W_{t_i}\big).
+%\]
+%\end{definition}
+%
+%This corresponds to a left-point discretization consistent with self-financing trading strategies.
+%
+%\subsection{Itô isometry}
+%
+%\begin{theorem}[Itô isometry — step processes]
+%Let $\phi$ be a simple predictable process. Then
+%\[
+%\E\!\left[\Big(\int_0^T \phi_t\,dW_t\Big)^2\right]
+%=
+%\E\!\left[\int_0^T \phi_t^2\,dt\right].
+%\]
+%\end{theorem}
+%
+%The Itô isometry is the key estimate enabling the extension of the integral to general integrands.
+%
+%\subsection{Extension by completion}
+%
+%\begin{definition}[Itô integral — general case]
+%Let $\phi$ be predictable and satisfy
+%\(
+%\E\int_0^T \phi_t^2\,dt < \infty.
+%\)
+%Choose any sequence of simple predictable processes $(\phi^n)$ such that
+%\[
+%\E\int_0^T (\phi^n_t-\phi_t)^2\,dt \to 0.
+%\]
+%Define
+%\[
+%\int_0^T \phi_t\,dW_t
+%:=
+%\lim_{n\to\infty} \int_0^T \phi^n_t\,dW_t
+%\quad\text{in }L^2(\Omega).
+%\]
+%\end{definition}
+%
+%The limit exists and is independent of the approximating sequence.
+%
+%\subsection{Fundamental properties}
+%
+%Let $\phi,\psi$ be Itô-integrable processes.
+%
+%\begin{itemize}
+%\item \textbf{Linearity:}
+%\[
+%\int_0^T (a\phi_t+b\psi_t)\,dW_t
+%=
+%a\int_0^T \phi_t\,dW_t
+%+
+%b\int_0^T \psi_t\,dW_t.
+%\]
+%
+%\item \textbf{Zero mean:}
+%\[
+%\E\!\left[\int_0^T \phi_t\,dW_t\right]=0.
+%\]
+%
+%\item \textbf{Itô isometry (general form):}
+%\[
+%\E\!\left[\Big(\int_0^T \phi_t\,dW_t\Big)^2\right]
+%=
+%\E\!\left[\int_0^T \phi_t^2\,dt\right].
+%\]
+%
+%\item \textbf{Covariance (polarization):}
+%\[
+%\E\!\left[\Big(\int_0^T \phi_t\,dW_t\Big)
+%\Big(\int_0^T \psi_t\,dW_t\Big)\right]
+%=
+%\E\!\left[\int_0^T \phi_t\psi_t\,dt\right].
+%\]
+%\end{itemize}
+%
+%\subsection{Martingale property}
+%
+%\begin{theorem}[Martingale property]
+%For $\phi$ predictable, satisfying
+%\(
+%\E\int_0^T \phi_t^2\,dt < \infty,
+%\) the process
+%\[
+%M_t := \int_0^t \phi_s\,dW_s,
+%\qquad 0\le t\le T,
+%\]
+%is an $(\mathcal F_t)$-martingale.
+%\end{theorem}
+%
+%\subsection{Deterministic integrands}
+%
+%\begin{theorem}[Gaussianity of deterministic integrals]
+%If $f\in L^2(0,T)$ is deterministic, then
+%\[
+%\int_0^T f(t)\,dW_t
+%\sim
+%\mathcal N\!\left(0,\int_0^T f(t)^2\,dt\right).
+%\]
+%\end{theorem}
+%
+%\subsection{Quadratic variation of Itô integrals}
+%
+%\begin{theorem}[Bracket of an Itô integral]
+%Let
+%\(
+%M_t=\int_0^t \phi_s\,dW_s
+%\)
+%with $\phi$ Itô-integrable. Then
+%\[
+%[M]_t = \int_0^t \phi_s^2\,ds
+%\qquad\text{a.s.}
+%\]
+%\end{theorem}
+%
+%This identity is the rigorous basis for the stochastic differential rule
+%\(
+%(dM_t)^2 = \phi_t^2\,dt.
+%\)
+%% ============================================================
+%
+%% ==========================
+%% Lecture 4 --- Itô processes and Itô's formula
+%% (2--3 pages max, statement-focused)
+%% ==========================
+%
+%\section{Lecture 4: It\^o processes and It\^o's formula}
+%
+%\paragraph{References}
+%% ============================================================
+%
+%\begin{itemize}[leftmargin=1.4em]
+%
+%\item \textit{Arbitrage Theory in Continuous Time}, T. Björk, Chapter~4, pp.~49-66
+%
+%\item \textit{Stochastic Calculus for Finance II: Continuous-Time Models},  
+%S. E. Shreve, Chapter~4, pp.~137-152
+%
+%\item \textit{Brownian Motion and Stochastic Calculus}, I. Karatzas and S. E. Shreve, Chapter~3, pp.~149-155
+%
+%\end{itemize}
+%
+%\subsection{Framework and It\^o processes}
+%
+%\begin{definition}[Filtered space and Brownian motion]
+%Let $(\Omega,\F,(\F_t)_{t\in[0,T]},\Pbb)$ be a filtered probability space satisfying the usual conditions,
+%supporting a one-dimensional Brownian motion $W=(W_t)_{t\in[0,T]}$.
+%\end{definition}
+%
+%\begin{definition}[It\^o process (scalar)]
+%An adapted real-valued process $X=(X_t)_{t\in[0,T]}$ is an \emph{It\^o process} if it admits the decomposition
+%\begin{equation}\label{eq:ito-process}
+%X_t = X_0 + \int_0^t a_s \dd s + \int_0^t b_s \dd W_s,
+%\qquad t\in[0,T],
+%\end{equation}
+%for some adapted processes $a,b$ such that
+%\begin{equation}\label{eq:ito-integrability}
+%\E\!\left[\int_0^T |a_s|\,\dd s\right]<\infty,
+%\qquad
+%\E\!\left[\int_0^T b_s^2\,\dd s\right]<\infty.
+%\end{equation}
+%We often write the differential shorthand
+%\[
+%\dd X_t = a_t\,\dd t + b_t\,\dd W_t,
+%\]
+%which is notation for \eqref{eq:ito-process}.
+%\end{definition}
+%
+%\begin{remark}[Finite variation vs.\ martingale parts]
+%The decomposition \eqref{eq:ito-process} splits $X$ into a finite-variation term $\int_0^\cdot a_s\dd s$
+%and a (local) martingale term $\int_0^\cdot b_s\dd W_s$. This split is structurally stable and is the basis
+%for ``drift vs.\ noise'' bookkeeping throughout It\^o calculus.
+%\end{remark}
+%
+%\subsection{Quadratic variation and covariation}
+%
+%\begin{definition}[Quadratic variation / covariation]
+%Let $X,Y$ be continuous processes. For a partition $\pi=\{0=t_0<\cdots<t_n=t\}$ of $[0,t]$, define
+%\[
+%[X]^{\pi}_t := \sum_{k=0}^{n-1} (X_{t_{k+1}}-X_{t_k})^2,
+%\qquad
+%[X,Y]^{\pi}_t := \sum_{k=0}^{n-1} (X_{t_{k+1}}-X_{t_k})(Y_{t_{k+1}}-Y_{t_k}).
+%\]
+%If $[X]^{\pi}_t \to [X]_t$ (resp.\ $[X,Y]^{\pi}_t \to [X,Y]_t$) in probability as $|\pi|\to 0$,
+%we call $[X]_t$ the \emph{quadratic variation} of $X$ (resp.\ $[X,Y]_t$ the \emph{quadratic covariation} of $(X,Y)$).
+%\end{definition}
+%
+%\begin{proposition}[Brownian quadratic variation]\label{prop:brownian-qv}
+%For Brownian motion $W$, one has
+%\[
+%[W]_t = t,\qquad t\in[0,T].
+%\]
+%\end{proposition}
+%
+%\begin{proposition}[Quadratic variation of an It\^o process]\label{prop:ito-qv}
+%Let $X$ be an It\^o process with $\dd X_t=a_t\dd t+b_t\dd W_t$.
+%Then
+%\begin{equation}\label{eq:qv-ito}
+%[X]_t = \int_0^t b_s^2\,\dd s,
+%\qquad\text{equivalently}\qquad
+%\dd[X]_t = b_t^2\,\dd t.
+%\end{equation}
+%More generally, for $M_t=\int_0^t \phi_s\,\dd W_s$ and $N_t=\int_0^t \psi_s\,\dd W_s$ (square-integrable),
+%\[
+%[M,N]_t = \int_0^t \phi_s\psi_s\,\dd s.
+%\]
+%\end{proposition}
+%
+%\begin{remark}[The It\^o multiplication table (mnemonic)]
+%The identities \eqref{eq:qv-ito} are summarized by the bookkeeping rules
+%\[
+%(\dd W_t)^2=\dd t,
+%\qquad
+%\dd W_t\,\dd t = 0,
+%\qquad
+%(\dd t)^2=0,
+%\qquad
+%(\dd X_t)^2 = b_t^2\,\dd t
+%\ \text{when}\ \dd X_t=a_t\dd t+b_t\dd W_t.
+%\]
+%These are mnemonic rules encoding quadratic variation, not classical differentials.
+%\end{remark}
+%
+%\subsection{It\^o's formula (scalar)}
+%
+%\begin{theorem}[It\^o's formula: Brownian case]\label{thm:ito-bm}
+%Let $f\in C^{1,2}([0,T]\times\R)$ and $W$ be Brownian motion. Then for all $t\in[0,T]$,
+%\begin{equation}\label{eq:ito-bm}
+%f(t,W_t)
+%=
+%f(0,W_0)
+%+
+%\int_0^t \partial_t f(s,W_s)\,\dd s
+%+
+%\int_0^t \partial_x f(s,W_s)\,\dd W_s
+%+
+%\frac12\int_0^t \partial_{xx} f(s,W_s)\,\dd s.
+%\end{equation}
+%Equivalently, in differential form,
+%\[
+%\dd f(t,W_t)=\partial_t f(t,W_t)\,\dd t+\partial_x f(t,W_t)\,\dd W_t+\frac12\partial_{xx} f(t,W_t)\,\dd t.
+%\]
+%\end{theorem}
+%
+%\begin{theorem}[It\^o's formula: It\^o process case]\label{thm:ito-1d}
+%Let $X$ be an It\^o process
+%\[
+%\dd X_t=a_t\,\dd t+b_t\,\dd W_t,
+%\]
+%and let $f\in C^{1,2}([0,T]\times\R)$. Then $Y_t:=f(t,X_t)$ is an It\^o process and
+%\begin{equation}\label{eq:ito-1d}
+%\dd f(t,X_t)
+%=
+%\partial_t f(t,X_t)\,\dd t
+%+
+%\partial_x f(t,X_t)\,\dd X_t
+%+
+%\frac12\,\partial_{xx} f(t,X_t)\,\dd[X]_t.
+%\end{equation}
+%Using $\dd[X]_t=b_t^2\dd t$, this becomes
+%\begin{equation}\label{eq:ito-1d-expanded}
+%\dd f(t,X_t)
+%=
+%\Big(\partial_t f + a_t\,\partial_x f + \tfrac12 b_t^2\,\partial_{xx} f\Big)(t,X_t)\,\dd t
+%+
+%\big(b_t\,\partial_x f\big)(t,X_t)\,\dd W_t.
+%\end{equation}
+%\end{theorem}
+%
+%\begin{remark}[Structural message: drift vs.\ martingale part]
+%Equation \eqref{eq:ito-1d-expanded} canonically decomposes $\dd f(t,X_t)$ into
+%\[
+%\begin{aligned}
+%\text{finite-variation part:}\quad
+%&\Big(\partial_t f + a_t\,\partial_x f
+%  +\tfrac12 b_t^2\,\partial_{xx} f\Big)(t,X_t)\dd t,\\
+%\text{local-martingale part:}\quad
+%&\big(b_t\,\partial_x f\big)(t,X_t)\dd W_t.
+%\end{aligned}
+%\]
+%A recurring principle is: \emph{to exhibit a martingale, enforce zero drift.}
+%\end{remark}
+%
+%\begin{remark}[Notation discipline]
+%Derivatives $\partial_x f$, $\partial_{xx} f$ are taken with respect to the deterministic variable $x$,
+%then evaluated at $x=X_t$. Expressions like $\frac{\partial f}{\partial X_t}$ are avoided.
+%\end{remark}
+%
+%\subsection{Multidimensional extension (statements)}
+%
+%\begin{definition}[Vector It\^o process]
+%Let $W^1,\dots,W^d$ be $d$ Brownian motions with constant covariation matrix
+%$\Sigma=(\rho_{ij})_{1\le i,j\le d}$, i.e.
+%\[
+%[W^i,W^j]_t=\rho_{ij}t,\qquad \Sigma\succeq 0.
+%\]
+%An adapted process $X=(X_t)_{t\in[0,T]}$ with values in $\R^m$ is a vector It\^o process if
+%\[
+%\dd X_t = a_t\,\dd t + B_t\,\dd W_t,
+%\]
+%where $a_t\in\R^m$ and $B_t\in\R^{m\times d}$ are adapted and satisfy suitable integrability conditions
+%(e.g.\ $\E\int_0^T \|a_t\|\,\dd t<\infty$ and $\E\int_0^T \|B_t\|^2\,\dd t<\infty$).
+%\end{definition}
+%
+%\begin{proposition}[Quadratic covariation matrix]\label{prop:qv-matrix}
+%For $\dd X_t=a_t\dd t+B_t\dd W_t$, the $m\times m$ quadratic covariation matrix
+%$[X]_t=([X^i,X^j]_t)_{i,j}$ satisfies
+%\[
+%\dd[X]_t = (B_t\,\Sigma\,B_t^\top)\,\dd t.
+%\]
+%\end{proposition}
+%
+%\begin{theorem}[Multidimensional It\^o formula]\label{thm:ito-md}
+%Let $f\in C^{1,2}([0,T]\times\R^m)$ and $X$ be a vector It\^o process. Then
+%\begin{equation}\label{eq:ito-md}
+%\dd f(t,X_t)
+%=
+%\partial_t f(t,X_t)\,\dd t
+%+
+%\nabla f(t,X_t)^\top \dd X_t
+%+
+%\frac12\,\mathrm{Tr}\!\Big(\nabla^2 f(t,X_t)\,\dd[X]_t\Big).
+%\end{equation}
+%Equivalently, using Proposition \ref{prop:qv-matrix},
+%\[
+%\dd f(t,X_t)
+%=
+%\Big(
+%\partial_t f + \nabla f^\top a_t + \tfrac12\,\mathrm{Tr}(\nabla^2 f\,B_t\Sigma B_t^\top)
+%\Big)(t,X_t)\,\dd t
+%+
+%\nabla f(t,X_t)^\top B_t\,\dd W_t.
+%\]
+%\end{theorem}
+%
+%\begin{remark}[Summation form]
+%Writing everything componentwise, the formula reads
+%\[
+%\dd f(t,X_t)
+%=
+%\partial_t f(t,X_t)\,\dd t
+%+
+%\sum_{i=1}^m \partial_{x_i} f(t,X_t)\,\dd X_t^i
+%+
+%\frac12
+%\sum_{i,j=1}^m
+%\partial_{x_i x_j} f(t,X_t)\,\dd[X^i,X^j]_t.
+%\]
+%If
+%\[
+%\dd X_t^i = a_t^i\,\dd t + \sum_{k=1}^d B_t^{ik}\,\dd W_t^k,
+%\]
+%then
+%\[
+%\dd[X^i,X^j]_t
+%=
+%\sum_{k,\ell=1}^d
+%B_t^{ik} B_t^{j\ell}\,\dd[W^k,W^\ell]_t
+%=
+%\sum_{k,\ell=1}^d
+%B_t^{ik} B_t^{j\ell}\,\Sigma_{k\ell}\,\dd t.
+%\]
+%This makes explicit how correlations between Brownian components enter It\^o's formula
+%through the mixed second derivatives.
+%\end{remark}
+%
+%\subsection{Immediate corollaries (structural identities)}
+%
+%\begin{proposition}[It\^o product rule]\label{prop:product-rule}
+%Let $X,Y$ be continuous semimartingales (in particular It\^o processes). Then
+%\[
+%\dd(X_tY_t)=X_t\,\dd Y_t + Y_t\,\dd X_t + \dd[X,Y]_t.
+%\]
+%\end{proposition}
+%
+%\begin{remark}[Core message]
+%In stochastic calculus, the classical Leibniz rule acquires the covariation correction $\dd[X,Y]_t$.
+%This correction is entirely governed by quadratic variation (hence by the Brownian components).
+%\end{remark}
+%
+%\begin{proposition}[Ratio rule (statement)]
+%Assume $Y_t>0$ and set $Z_t=X_t/Y_t$. Then, for continuous semimartingales,
+%\[
+%\dd\Big(\frac{X_t}{Y_t}\Big)
+%=
+%\frac{1}{Y_t}\,\dd X_t
+%-\frac{X_t}{Y_t^2}\,\dd Y_t
+%+\frac{X_t}{Y_t^3}\,\dd[Y]_t
+%-\frac{1}{Y_t^2}\,\dd[X,Y]_t.
+%\]
+%\end{proposition}
+%
+%\subsection{Formal It\^o calculus: differential rules and a product example}
+%
+%\begin{remark}[Formal bookkeeping (It\^o table)]
+%In computations, one often manipulates differentials \emph{formally} using the following rule:
+%\emph{keep only terms of order $\dd t$ and discard higher-order terms.}
+%This is justified by quadratic covariation identities.
+%\end{remark}
+%
+%\paragraph{It\^o multiplication table.}
+%Let $B=(B^1,\dots,B^d)$ be a $d$-dimensional Brownian motion with
+%\[
+%[B^i,B^j]_t = \rho_{ij}\,t,
+%\qquad \Sigma := (\rho_{ij})_{1\le i,j\le d}\succeq 0.
+%\]
+%Then, in differential form,
+%\[
+%\dd B_t^i\,\dd B_t^j = \dd[B^i,B^j]_t = \rho_{ij}\,\dd t,
+%\qquad
+%\dd B_t^i\,\dd t = 0,
+%\qquad
+%(\dd t)^2=0.
+%\]
+%Equivalently, the ``multiplication table'' is:
+%\[
+%\begin{array}{c|ccc}
+%\cdot & \dd B_t^j & \dd t \\ \hline
+%\dd B_t^i & \rho_{ij}\,\dd t & 0 \\
+%\dd t & 0 & 0
+%\end{array}
+%\]
+%(Interpretation: only products producing a $\dd t$ term survive.)
+%
+%\medskip
+%\paragraph{From $\dd X$ to $\dd[X]$.}
+%If $X$ is an $m$-dimensional It\^o process
+%\[
+%\dd X_t = a_t\,\dd t + B_t\,\dd B_t,
+%\qquad a_t\in\R^m,\ B_t\in\R^{m\times d},
+%\]
+%then formally
+%\[
+%\dd X_t\,\dd X_t^\top
+%=
+%(B_t\,\dd B_t)(B_t\,\dd B_t)^\top
+%=
+%B_t\,(\dd B_t\,\dd B_t^\top)\,B_t^\top
+%=
+%B_t\,\Sigma\,B_t^\top\,\dd t,
+%\]
+%hence (rigorously) $\dd[X]_t = B_t\Sigma B_t^\top\,\dd t$.
+%
+%\paragraph{Product rule via the table (two-dimensional example).}
+%Let $X^1,X^2$ be real It\^o processes driven by a two-dimensional Brownian motion
+%$B=(B^1,B^2)$ with $[B^1,B^2]_t=\rho t$:
+%\[
+%\dd X_t^1 = \mu_t^1\,\dd t + \sigma_t^{11}\,\dd B_t^1 + \sigma_t^{12}\,\dd B_t^2,
+%\qquad
+%\dd X_t^2 = \mu_t^2\,\dd t + \sigma_t^{21}\,\dd B_t^1 + \sigma_t^{22}\,\dd B_t^2,
+%\]
+%where the coefficients are adapted and integrable as needed.
+%
+%Set $Z_t := X_t^1 X_t^2$. By It\^o's formula with $f(x_1,x_2)=x_1x_2$ (or equivalently the product rule),
+%\begin{equation}\label{eq:ito-product-two}
+%\dd Z_t
+%=
+%X_t^1\,\dd X_t^2
+%+
+%X_t^2\,\dd X_t^1
+%+
+%\dd[X^1,X^2]_t.
+%\end{equation}
+%Using the formal table,
+%\[
+%\dd[X^1,X^2]_t
+%=
+%\dd X_t^1\,\dd X_t^2
+%=
+%(\sigma_t^{11}\dd B_t^1+\sigma_t^{12}\dd B_t^2)(\sigma_t^{21}\dd B_t^1+\sigma_t^{22}\dd B_t^2),
+%\]
+%and keeping only $\dd t$ terms gives
+%\[
+%\dd[X^1,X^2]_t
+%=
+%\Big(
+%\sigma_t^{11}\sigma_t^{21}\,\dd B_t^1\dd B_t^1
+%+
+%\sigma_t^{11}\sigma_t^{22}\,\dd B_t^1\dd B_t^2
+%+
+%\sigma_t^{12}\sigma_t^{21}\,\dd B_t^2\dd B_t^1
+%+
+%\sigma_t^{12}\sigma_t^{22}\,\dd B_t^2\dd B_t^2
+%\Big).
+%\]
+%Since $\dd B_t^1\dd B_t^1=\dd t$, $\dd B_t^2\dd B_t^2=\dd t$, and
+%$\dd B_t^1\dd B_t^2=\dd B_t^2\dd B_t^1=\rho\,\dd t$, we obtain
+%\begin{equation}\label{eq:crossvar-two}
+%\dd[X^1,X^2]_t
+%=
+%\Big(
+%\sigma_t^{11}\sigma_t^{21}
+%+
+%\sigma_t^{12}\sigma_t^{22}
+%+
+%\rho(\sigma_t^{11}\sigma_t^{22}+\sigma_t^{12}\sigma_t^{21})
+%\Big)\dd t.
+%\end{equation}
+%Plugging \eqref{eq:crossvar-two} into \eqref{eq:ito-product-two} yields the explicit drift/diffusion decomposition:
+%\begin{align*}
+%\dd(X_t^1X_t^2)
+%=
+%&\underbrace{\Big(
+%X_t^1\mu_t^2 + X_t^2\mu_t^1
+%+
+%\sigma_t^{11}\sigma_t^{21}
+%+
+%\sigma_t^{12}\sigma_t^{22}
+%+
+%\rho(\sigma_t^{11}\sigma_t^{22}+\sigma_t^{12}\sigma_t^{21})
+%\Big)\dd t}_{\text{drift}}
+%\\
+%\;&+\;
+%\underbrace{\Big(
+%X_t^1(\sigma_t^{21}\dd B_t^1+\sigma_t^{22}\dd B_t^2)
+%+
+%X_t^2(\sigma_t^{11}\dd B_t^1+\sigma_t^{12}\dd B_t^2)
+%\Big)}_{\text{martingale part}}.
+%\end{align*}
+%
+%\begin{remark}[Vector/matrix form]
+%Let $\sigma_t^1=(\sigma_t^{11},\sigma_t^{12})$ and $\sigma_t^2=(\sigma_t^{21},\sigma_t^{22})$ in $\R^2$.
+%Then $\dd[X^1,X^2]_t = (\sigma_t^1)^\top \Sigma\,\sigma_t^2\,\dd t$ with
+%$\Sigma=\begin{pmatrix}1&\rho\\ \rho&1\end{pmatrix}$.
+%More generally, if $\dd X_t^k=\mu_t^k\dd t + (\sigma_t^k)^\top \dd B_t$ for $k=1,2$ with $\sigma_t^k\in\R^d$, then
+%\[
+%\dd[X^1,X^2]_t = (\sigma_t^1)^\top \Sigma\,\sigma_t^2\,\dd t,
+%\qquad
+%\dd(X_t^1X_t^2)=X_t^1\dd X_t^2+X_t^2\dd X_t^1+(\sigma_t^1)^\top \Sigma\,\sigma_t^2\,\dd t.
+%\]
+%\end{remark}
+%
+%
+%% ==========================================================
+%\section{Lecture 5--- Black-Scholes pricing, Greeks, and implied volatility}
+%% ==========================================================
+%
+%\paragraph{References}
+%% ============================================================
+%
+%\begin{itemize}[leftmargin=1.4em]
+%
+%\item \textit{Arbitrage Theory in Continuous Time},  
+%T. Björk, Chapter~9, pp.~125-136
+%
+%\item \textit{Stochastic Calculus for Finance II: Continuous-Time Models},  
+%S. E. Shreve, Chapter~4, pp.~153-163
+%
+%\end{itemize}
+%
+%
+%\subsection{Model and pricing principle (risk-neutral form)}
+%Fix $0\le t\le T$. In the Black--Scholes model, under the risk-neutral measure,
+%\[
+%\dd S_u = r S_u\,\dd u + \sigma S_u\,\dd W_u,
+%\qquad S_t=s>0,
+%\]
+%with constants $r\in\R$ and $\sigma>0$. For a European payoff $g(S_T)$, the no-arbitrage price is
+%\[
+%p(t,s)=\E\!\left[e^{-r(T-t)}\,g(S_T)\,\middle|\,S_t=s\right].
+%\]
+%Equivalently, $p$ solves the Black--Scholes PDE
+%\begin{equation}\label{eq:BS-PDE}
+%\partial_t p(t,s)+r s\,\partial_s p(t,s)+\tfrac12\sigma^2 s^2\,\partial_{ss}p(t,s)-r\,p(t,s)=0,
+%\qquad p(T,s)=g(s).
+%\end{equation}
+%
+%\subsection{Closed-form Black--Scholes formulas}
+%Let $\Phi$ denote the standard normal CDF and $\varphi=\Phi'$ its density.
+%For a European call $C(t,s;K,T,r,\sigma)$ with strike $K>0$ and maturity $T$:
+%\begin{align}
+%C(t,s) &= s\,\Phi(d_1)-K e^{-r\tau}\,\Phi(d_2), \label{eq:BS-call}\\
+%d_1 &= \frac{\ln(s/K)+(r+\tfrac12\sigma^2)\tau}{\sigma\sqrt{\tau}},\qquad
+%d_2 = d_1-\sigma\sqrt{\tau},\qquad \tau:=T-t. \label{eq:d1d2}
+%\end{align}
+%For a European put $P(t,s)$:
+%\begin{equation}\label{eq:BS-put}
+%P(t,s)=K e^{-r\tau}\,\Phi(-d_2)-s\,\Phi(-d_1).
+%\end{equation}
+%
+%\begin{proposition}[Put--call parity]
+%For any $t\le T$,
+%\begin{equation}\label{eq:put-call-parity}
+%C(t,s)-P(t,s)=s-K e^{-r(T-t)}.
+%\end{equation}
+%\end{proposition}
+%
+%\subsection{Greeks: definitions and closed forms (call)}
+%Greeks are first-order (and second-order) sensitivities of the price map
+%\[
+%(s,t,r,\sigma)\longmapsto p(t,s;K,T,r,\sigma).
+%\]
+%For the call \eqref{eq:BS-call}--\eqref{eq:d1d2}, define
+%\[
+%\Delta:=\partial_s C,\qquad
+%\Gamma:=\partial_{ss}C,\qquad
+%\Theta:=\partial_t C,\qquad
+%\text{Vega}:=\partial_\sigma C,\qquad
+%\rho:=\partial_r C.
+%\]
+%Then:
+%\begin{align}
+%\Delta(t,s) &= \Phi(d_1), \label{eq:delta}\\
+%\Gamma(t,s) &= \frac{\varphi(d_1)}{s\sigma\sqrt{\tau}}, \label{eq:gamma}\\
+%\text{Vega}(t,s) &= s\,\varphi(d_1)\sqrt{\tau}, \label{eq:vega}\\
+%\rho(t,s) &= K\tau e^{-r\tau}\,\Phi(d_2). \label{eq:rho}
+%\end{align}
+%A convenient expression for $\Theta$ (time decay) is
+%\begin{equation}\label{eq:theta}
+%\Theta(t,s)=
+%-\frac{s\varphi(d_1)\sigma}{2\sqrt{\tau}}
+%-rK e^{-r\tau}\Phi(d_2).
+%\end{equation}
+%
+%\begin{remark}[Put Greeks]
+%For puts, one may either differentiate \eqref{eq:BS-put} directly or use put--call parity
+%\eqref{eq:put-call-parity}. For instance,
+%$\Delta_P=\Delta_C-1=\Phi(d_1)-1=-\Phi(-d_1)$, while $\Gamma$ and Vega coincide for calls and puts.
+%\end{remark}
+%
+%\subsection{Structural identities (useful for consistency checks)}
+%The Black--Scholes price satisfies the PDE \eqref{eq:BS-PDE}; plugging the call price into the PDE yields
+%the identity (``PDE as a Greek relation'')
+%\begin{equation}\label{eq:BS-PDE-greeks}
+%\Theta + \tfrac12\sigma^2 s^2 \Gamma + r s \Delta - r C = 0.
+%\end{equation}
+%A basic differential identity repeatedly used in Greek derivations is
+%\begin{equation}\label{eq:phi-identity}
+%s\,\varphi(d_1)=K e^{-r\tau}\,\varphi(d_2),
+%\end{equation}
+%which follows from $d_2=d_1-\sigma\sqrt{\tau}$ and elementary algebra.
+%
+%\subsection{Implied volatility}
+%Market quotes are typically given in terms of \emph{implied volatility} rather than $\sigma$.
+%Fix $(t,s,K,T,r)$ and an observed market option price $C^{\mathrm{mkt}}$ (call).
+%The \emph{Black--Scholes implied volatility} $\sigma_{\mathrm{imp}}$ is defined as the (typically unique) solution
+%\begin{equation}\label{eq:implvol-def}
+%C(t,s;K,T,r,\sigma_{\mathrm{imp}})=C^{\mathrm{mkt}}.
+%\end{equation}
+%
+%\begin{proposition}[Monotonicity in $\sigma$ and well-posedness]
+%For $\tau>0$ and $s>0$, the map $\sigma\mapsto C(t,s;K,T,r,\sigma)$ is strictly increasing, with
+%\[
+%\partial_\sigma C=\text{Vega}= s\,\varphi(d_1)\sqrt{\tau}>0.
+%\]
+%Hence the implied volatility equation \eqref{eq:implvol-def} has at most one solution; when
+%$C^{\mathrm{mkt}}$ lies between the no-arbitrage bounds (see below), a solution exists.
+%\end{proposition}
+%
+%\begin{remark}[No-arbitrage price bounds]
+%For calls,
+%\[
+%(s-K e^{-r\tau})_+ \le C(t,s) \le s.
+%\]
+%The lower bound is the discounted intrinsic value and the upper bound is immediate from
+%$0\le (S_T-K)_+\le S_T$.
+%\end{remark}
+%
+%\subsection{From price sensitivity to implied-vol sensitivity (vega inversion)}
+%When $\sigma_{\mathrm{imp}}$ exists and Vega is nonzero, the implicit function theorem yields the local sensitivity
+%of implied volatility to a perturbation of the quoted price:
+%\begin{equation}\label{eq:impvol-sensitivity}
+%\frac{\partial \sigma_{\mathrm{imp}}}{\partial C^{\mathrm{mkt}}}
+%=
+%\frac{1}{\text{Vega}(t,s;K,T,r,\sigma_{\mathrm{imp}})}.
+%\end{equation}
+%More generally, for any parameter $\theta$ entering the pricing map (e.g.\ $s$, $r$, $K$, $t$),
+%differentiating \eqref{eq:implvol-def} gives
+%\begin{equation}\label{eq:impvol-chainrule}
+%\partial_\theta \sigma_{\mathrm{imp}}
+%=
+%-\frac{\partial_\theta C(t,s;K,T,r,\sigma_{\mathrm{imp}})}{\partial_\sigma C(t,s;K,T,r,\sigma_{\mathrm{imp}})}
+%=
+%-\frac{\partial_\theta C}{\text{Vega}}\Big|_{\sigma=\sigma_{\mathrm{imp}}}.
+%\end{equation}
+%
+%\begin{remark}[Volatility surface]
+%In practice, $\sigma_{\mathrm{imp}}$ is quoted as a function of strike and maturity,
+%$(K,T)\mapsto \sigma_{\mathrm{imp}}(K,T)$ (smile/skew and term structure).
+%Within Black--Scholes, $\sigma$ is constant; the dependence of $\sigma_{\mathrm{imp}}$ on $(K,T)$
+%therefore encodes deviations of market prices from the lognormal model.
+%\end{remark}
+%
+%% ============================================================
+%\section{Lecture 6 --- Change of Measure and Girsanov's Theorem}
+%% ============================================================
+%
+%
+%\paragraph{References}
+%% ============================================================
+%
+%\begin{itemize}[leftmargin=1.4em]
+%
+%\item \textit{Arbitrage Theory in Continuous Time},  
+%T. Björk, Chapter~92, pp.~92-115
+%
+%\item \textit{Stochastic Calculus for Finance II: Continuous-Time Models},  
+%S. E. Shreve, Chapter~5, pp.~209-262
+%
+%\item \textit{Brownian Motion and Stochastic Calculus}, I. Karatzas and S. E. Shreve, Chapter~3, pp.~190-200
+%
+%\end{itemize}
+%
+%
+%
+%\subsection{Change of probability measure: core identity}
+%
+%A new probability measure $\Qbb$ on $(\Omega,\F)$ can be defined from a nonnegative random variable $Z$ such that
+%\[
+%Z\ge 0,
+%\qquad
+%\E^{\Pbb}[Z]=1,
+%\]
+%by setting
+%\[
+%\Qbb(A):=\E^{\Pbb}[Z\,\1_A],
+%\qquad A\in\F.
+%\]
+%The random variable $Z$ is the Radon--Nikodym density:
+%\[
+%Z=\frac{\dd \Qbb}{\dd \Pbb}.
+%\]
+%
+%The basic computation is
+%\[
+%\E^{\Qbb}[Y]=\E^{\Pbb}[ZY]
+%\]
+%for every integrable random variable $Y$.
+%
+%\paragraph{Interpretation.}
+%Changing measure does not change the underlying random variables; it changes the weights assigned to scenarios.
+%Large values of $Z(\omega)$ make the path $\omega$ more likely under $\Qbb$ than under $\Pbb$.
+%
+%\subsection{Conditional expectation under the new measure}
+%
+%Let $\mathcal G\subset \F$ be a sub-$\sigma$-algebra.
+%If $Z>0$ and $Y$ is integrable, then Bayes' rule gives
+%\[
+%\boxed{
+%\;
+%\E^{\Qbb}[Y\mid \mathcal G]
+%=
+%\frac{\E^{\Pbb}[ZY\mid \mathcal G]}{\E^{\Pbb}[Z\mid \mathcal G]}.
+%\;}
+%\]
+%This is the key computational tool for passing from $\Pbb$ to $\Qbb$ in conditional pricing formulas.
+%
+%\subsection{Gaussian tilting: the finite-dimensional prototype}
+%
+%If $X\sim \\mathcal{N}(0,1)$ under $\Pbb$ and
+%\[
+%Z=\exp\!\Big(-\theta X-\tfrac12\theta^2\Big),
+%\]
+%then $\E^{\Pbb}[Z]=1$, so $Z$ defines a new probability measure.
+%A direct completion of the square shows that under the new measure,
+%\[
+%X\sim \\mathcal{N}(-\theta,1).
+%\]
+%
+%\paragraph{Message.}
+%Exponential tilting shifts the mean of a Gaussian variable while keeping the variance unchanged.
+%Girsanov is the pathwise analogue of this fact for Brownian motion.
+%
+%\subsection{Stochastic exponential and density process}
+%
+%Let $W$ be a Brownian motion under $\Pbb$, and let $\phi=(\phi_t)_{0\le t\le T}$ be progressively measurable with
+%\[
+%\int_0^T \phi_t^2\,\dd t<\infty
+%\qquad\text{a.s.}
+%\]
+%Define the stochastic exponential
+%\[
+%Z_t
+%=
+%\exp\!\left(
+%\int_0^t \phi_s\,\dd W_s
+%-
+%\frac12\int_0^t \phi_s^2\,\dd s
+%\right).
+%\]
+%It satisfies the SDE
+%\[
+%\dd Z_t = Z_t\,\phi_t\,\dd W_t,
+%\qquad Z_0=1.
+%\]
+%In particular, $Z_t\ge 0$, and $(Z_t)$ is a local martingale (hence a supermartingale).
+%
+%A standard sufficient condition ensuring that $(Z_t)$ is a true martingale is Novikov's condition:
+%\[
+%\E^{\Pbb}\!\left[\exp\!\left(\frac12\int_0^T \phi_t^2\,\dd t\right)\right]<\infty.
+%\]
+%
+%\subsection{Girsanov's theorem}
+%
+%Assume $\E^{\Pbb}[Z_T]=1$ and define $\Qbb$ on $\F_T$ by
+%\[
+%\frac{\dd \Qbb}{\dd \Pbb}\Big|_{\F_T}=Z_T.
+%\]
+%Then Girsanov's theorem states that the process
+%\[
+%B_t:=W_t-\int_0^t \phi_s\,\dd s
+%\]
+%is a Brownian motion under $\Qbb$.
+%
+%Equivalently,
+%\[
+%W_t=B_t+\int_0^t \phi_s\,\dd s,
+%\]
+%so the process $W$ acquires drift $\int_0^\cdot \phi_s\,\dd s$ when viewed under $\Qbb$.
+%
+%\paragraph{Main interpretation.}
+%A drift can be moved from the dynamics into the probability measure.
+%This is the fundamental bridge from real-world dynamics to pricing dynamics.
+%
+%\subsection{Effect on an It\^o process}
+%
+%Suppose under $\Pbb$,
+%\[
+%\dd X_t=b_t\,\dd t+a_t\,\dd W_t.
+%\]
+%If $\Qbb$ is defined by Girsanov with shift $\phi$, then under $\Qbb$ we have
+%\[
+%\dd W_t=\dd B_t+\phi_t\,\dd t,
+%\]
+%hence
+%\[
+%\dd X_t
+%=
+%\big(b_t+a_t\phi_t\big)\,\dd t + a_t\,\dd B_t.
+%\]
+%
+%\paragraph{Key structural fact.}
+%Under a change of measure of Girsanov type:
+%\begin{itemize}[leftmargin=1.4em]
+%    \item the drift changes,
+%    \item the diffusion coefficient does not.
+%\end{itemize}
+%
+%\subsection{Risk-neutral drift in Black--Scholes}
+%
+%Consider the stock under $\Pbb$:
+%\[
+%\frac{\dd S_t}{S_t}=\mu_t\,\dd t+\sigma_t\,\dd W_t,
+%\qquad \sigma_t>0,
+%\]
+%and the money-market account
+%\[
+%B_t^{(0)}=\exp\!\left(\int_0^t r_s\,\dd s\right),
+%\qquad
+%D_t=\frac{1}{B_t^{(0)}}.
+%\]
+%The discounted stock $\bar S_t=D_tS_t$ satisfies
+%\[
+%\dd \bar S_t=(\mu_t-r_t)\bar S_t\,\dd t+\sigma_t\bar S_t\,\dd W_t.
+%\]
+%
+%Define the market price of risk
+%\[
+%\phi_t:=\frac{\mu_t-r_t}{\sigma_t},
+%\]
+%and the corresponding density
+%\[
+%Z_t
+%=
+%\exp\!\left(
+%-\int_0^t \phi_s\,\dd W_s
+%-
+%\frac12\int_0^t \phi_s^2\,\dd s
+%\right).
+%\]
+%Under the associated measure $\Qbb$, the process
+%\[
+%B_t:=W_t+\int_0^t \phi_s\,\dd s
+%\]
+%is Brownian, and substituting $\dd W_t=\dd B_t-\phi_t\,\dd t$ yields
+%\[
+%\dd \bar S_t=\sigma_t\bar S_t\,\dd B_t.
+%\]
+%Therefore the discounted stock is a local martingale under $\Qbb$, and the stock dynamics become
+%\[
+%\boxed{
+%\;
+%\frac{\dd S_t}{S_t}=r_t\,\dd t+\sigma_t\,\dd B_t.
+%\;}
+%\]
+%
+%\paragraph{Meaning.}
+%Under the pricing measure, the risky asset grows at the short rate, not at the real-world expected return.
+%
+%\subsection{End-of-lecture takeaway}
+%
+%The lecture can be summarized in one chain:
+%\[
+%\text{density } Z
+%\quad\Longrightarrow\quad
+%\text{new measure } \Qbb
+%\quad\Longrightarrow\quad
+%\text{Brownian drift shift}
+%\quad\Longrightarrow\quad
+%\text{risk-neutral dynamics}.
+%\]
+%This is the key mechanism behind risk-neutral pricing:
+%change the probability so that discounted traded assets become martingales, then price by conditional expectation under that measure.
+%
+%
+%
+%% ============================================================
+%\section{Lecture 7--Martingale Pricing, Hedging via MRT, and Path-Dependent Claims}
+%% ============================================================
+%
+%
+%\paragraph{References}
+%% ============================================================
+%
+%\begin{itemize}[leftmargin=1.4em]
+%
+%\item \textit{Arbitrage Theory in Continuous Time},  
+%T. Björk, Chapter~92, pp.~92-115
+%
+%\item \textit{Stochastic Calculus for Finance II: Continuous-Time Models},  
+%S. E. Shreve, Chapter~5, pp.~209-262
+%
+%\item \textit{Brownian Motion and Stochastic Calculus}, I. Karatzas and S. E. Shreve, Chapter~3, pp.~190-200
+%
+%\end{itemize}
+%
+%
+%\lecturesummary{
+%We reorganize the pricing story around the Fundamental Theorem of Asset Pricing: under no-arbitrage there exists a measure under which discounted traded assets are martingales. Replicable claims are then priced by conditional expectation. In Brownian (complete) models, the hedge is recovered from the Martingale Representation Theorem (MRT). We also discuss dividends and illustrate how path dependence (Asian options) is handled by enlarging the state.}
+%
+%\subsection{From replication to pricing identities}
+%
+%\paragraph{Num\'eraire and discounting.}
+%Let $B^{(0)}$ be the money-market num\'eraire,
+%\[
+%B_t^{(0)}=\exp\!\Big(\int_0^t r_s\,\dd s\Big),
+%\qquad
+%D_t:=\frac{1}{B_t^{(0)}}=\exp\!\Big(-\int_0^t r_s\,\dd s\Big).
+%\]
+%For any price process $X$, define its discounted version $\bar X_t:=D_t X_t$.
+%
+%\paragraph{Equivalent martingale measure (EMM).}
+%A probability measure $\Qbb$ on $(\Omega,\F_T)$ is an EMM (relative to $B^{(0)}$) if:
+%(i) $\Qbb\sim \Pbb$, and (ii) every discounted traded asset price $(\bar S_t^i)$ is a $\Qbb$-(local) martingale.
+%
+%\begin{proposition}[Pricing identity for a replicable claim]
+%Let $H$ be an $\F_T$-measurable payoff, and assume there exists a self-financing strategy
+%replicating $H$ with wealth process $X$ such that $X_T=H$.
+%If $\Qbb$ is an EMM, then the discounted wealth $\bar X_t=D_t X_t$ is a $\Qbb$-martingale and
+%\[
+%\boxed{
+%\;
+%V_t=X_t
+%=
+%\frac{1}{D_t}\,\E^{\Qbb}\!\big[D_T H\mid \F_t\big]
+%=
+%\E^{\Qbb}\!\left[\frac{B_t^{(0)}}{B_T^{(0)}}\,H\;\middle|\;\F_t\right].
+%\;}
+%\]
+%If rates are deterministic, this reduces to
+%\[
+%\boxed{
+%\;
+%V_t=\E^{\Qbb}\!\left[e^{-\int_t^T r_s\,\dd s}\,H\;\middle|\;\F_t\right].
+%\;}
+%\]
+%\end{proposition}
+%
+%\begin{remark}[Markov vs non-Markov]
+%If the model is Markov and $H=g(S_T)$, one often has $V_t=v(t,S_t)$ and can connect the expectation to a PDE (Feynman--Kac).
+%If $H$ is path-dependent (Asian/lookback/barrier), the conditional expectation is still valid but $V_t$ need not be a function of $(t,S_t)$ alone.
+%\end{remark}
+%
+%\subsection{Dividend-paying stock: price vs gain process}
+%
+%\paragraph{Continuous dividend yield.}
+%If the stock pays a proportional dividend rate (yield) $q_t\ge 0$, holding one share generates cashflow $q_t S_t\,\dd t$.
+%Define the one-share gain process by
+%\[
+%\dd G_t := \dd S_t + q_t S_t\,\dd t.
+%\]
+%
+%\begin{proposition}[Risk-neutral drift with dividends]
+%Under the EMM $\Qbb$ associated with $B^{(0)}$, it is the discounted gain process $D_t G_t$ that must be a martingale.
+%Equivalently, under $\Qbb$ the stock satisfies
+%\[
+%\boxed{\ \frac{\dd S_t}{S_t}=(r_t-q_t)\,\dd t+\sigma_t\,\dd B_t,\ }
+%\]
+%so that the expected total return (price appreciation + dividend yield) equals $r_t$.
+%\end{proposition}
+%
+%\begin{remark}[Cum-dividend / reinvested formulation]
+%Define $\widetilde S_t:=S_t\exp(\int_0^t q_u\,\dd u)$. Then $D_t\widetilde S_t$ is a (local) martingale under $\Qbb$.
+%\end{remark}
+%
+%\subsection{From pricing to hedging: Martingale Representation Theorem (MRT)}
+%
+%\paragraph{Discounted claim price is a martingale.}
+%For any payoff $H$ with $D_T H\in L^2(\Qbb)$, define
+%\[
+%M_t:=\E^{\Qbb}\!\big[D_T H\mid \F_t\big],
+%\qquad
+%\bar V_t:=D_t V_t = M_t.
+%\]
+%Then $(\bar V_t)$ is a square-integrable $\Qbb$-martingale.
+%
+%\begin{theorem}[MRT (informal, Brownian filtration)]
+%Assume $(\F_t)$ is generated by a $d$-dimensional Brownian motion $B$ under $\Qbb$.
+%Then there exists a predictable $\psi_t\in\R^d$ such that
+%\[
+%\boxed{\ M_t = M_0+\int_0^t \psi_u\cdot \dd B_u,\qquad 0\le t\le T.\ }
+%\]
+%Equivalently, $\dd M_t=\psi_t\cdot \dd B_t$.
+%\end{theorem}
+%
+%\paragraph{Recovering the hedge (one risky asset).}
+%Suppose there is one risky asset $S$ and, under $\Qbb$,
+%\[
+%\frac{\dd S_t}{S_t}=r_t\,\dd t+\sigma_t\,\dd B_t,
+%\qquad \sigma_t>0,
+%\]
+%so $\dd\bar S_t=\sigma_t \bar S_t\,\dd B_t$.
+%If $V$ is replicated by holding $\Delta_t$ shares of $S$ (self-financing), then
+%\[
+%\dd\bar V_t = \Delta_t\,\dd\bar S_t = \Delta_t\,\sigma_t \bar S_t\,\dd B_t.
+%\]
+%But MRT gives $\dd\bar V_t=\psi_t\,\dd B_t$, hence
+%\[
+%\boxed{\ \Delta_t=\frac{\psi_t}{\sigma_t \bar S_t}=\frac{\psi_t}{\sigma_t D_t S_t}. \ }
+%\]
+%
+%\begin{remark}[PDE delta vs martingale hedge]
+%In a Markov setting with $V_t=v(t,S_t)$ smooth, It\^o gives $\dd V_t=\cdots + \partial_s v(t,S_t)\dd S_t$,
+%so $\Delta_t=\partial_s v(t,S_t)$. In Black--Scholes, this coincides with the MRT-based hedge.
+%The martingale route is more general (works beyond the PDE/Markov framework).
+%\end{remark}
+%
+%\subsection{Asian options: pricing by state augmentation}
+%
+%\paragraph{Typical payoff.}
+%A fixed-strike arithmetic Asian call depends on the average price:
+%\[
+%H=\left(\frac{1}{T}\int_0^T S_u\,\dd u - K\right)^+.
+%\]
+%This payoff is path-dependent, so $S_t$ alone is not a sufficient state variable.
+%
+%\paragraph{Risk-neutral pricing remains valid.}
+%\[
+%\boxed{
+%\;
+%V_t
+%=
+%\E^{\Qbb}\!\left[e^{-\int_t^T r_s\,\dd s}\,H\;\middle|\;\F_t\right].
+%\;}
+%\]
+%
+%\paragraph{Markovization via enlarged state.}
+%Introduce the running integral
+%\[
+%A_t:=\int_0^t S_u\,\dd u,
+%\qquad \dd A_t = S_t\,\dd t.
+%\]
+%Then the pair $(S_t,A_t)$ is Markov under $\Qbb$ with dynamics
+%\[
+%\frac{\dd S_t}{S_t}=r_t\,\dd t+\sigma_t\,\dd B_t,
+%\qquad
+%\dd A_t=S_t\,\dd t,
+%\]
+%and one may write
+%\[
+%V_t = v(t,S_t,A_t),
+%\qquad
+%v(t,s,a)
+%=
+%\E^{\Qbb}\!\left[
+%e^{-\int_t^T r_u\,\dd u}
+%\left(\frac{A_T}{T}-K\right)^+
+%\;\middle|\; S_t=s,\ A_t=a
+%\right].
+%\]
+%
+%\paragraph{PDE (optional, higher dimension).}
+%If coefficients are regular, $v$ solves the 2D linear pricing PDE
+%\[
+%\partial_t v + r_t s\,\partial_s v + s\,\partial_a v
+%+\frac12\sigma_t^2 s^2\,\partial_{ss}v - r_t v = 0,
+%\qquad
+%v(T,s,a)=\left(\frac{a}{T}-K\right)^+.
+%\]
+%
+%\begin{remark}[Arithmetic vs geometric average]
+%Geometric-average Asians can admit closed forms in Black--Scholes (log-average is Gaussian).
+%Arithmetic-average Asians typically do not, and are commonly priced by Monte Carlo / numerical PDE in the enlarged state.
+%\end{remark}
+%
+%\subsection{Lecture 7 checklist (what you must be able to do)}
+%\begin{itemize}[leftmargin=1.6em, itemsep=0.25em]
+%\item Define num\'eraire, discounted prices, and an equivalent martingale measure (EMM).
+%\item Use the pricing identity $V_t=\frac{1}{D_t}\E^{\Qbb}[D_T H\mid\F_t]$ for replicable claims.
+%\item Explain dividends: price vs gain process, and why the risk-neutral drift becomes $r_t-q_t$.
+%\item State the Martingale Representation Theorem (MRT) and explain how it yields the hedge.
+%\item For Asian payoffs, write the risk-neutral pricing formula and perform state augmentation with $A_t=\int_0^t S_u\,\dd u$.
+%\end{itemize}
+%
+%
+%
+%
+%% ============================================================
+%\section{Lecture 8 --- No-arbitrage principles and the Fundamental Theorems of Asset Pricing}
+%% ============================================================
+%
+%
+%\paragraph{References}
+%% ============================================================
+%
+%\begin{itemize}[leftmargin=1.4em]
+%
+%\item \textit{Arbitrage Theory in Continuous Time},  
+%T. Björk  
+%\hfill Chapter~\underline{\hspace{1cm}}, pp.~\underline{\hspace{1cm}}
+%
+%\item \textit{Stochastic Calculus for Finance II: Continuous-Time Models},  
+%S. E. Shreve  
+%\hfill Chapter~\underline{\hspace{1cm}}, pp.~\underline{\hspace{1cm}}
+%
+%\item \textit{Brownian Motion and Stochastic Calculus},  
+%I. Karatzas and S. E. Shreve  
+%\hfill Chapter~\underline{\hspace{1cm}}, pp.~\underline{\hspace{1cm}}
+%
+%\end{itemize}
+%
+%
+%\lecturesummary{
+%This lecture explains the logical structure of arbitrage-free pricing.
+%The starting point is very simple: larger payoffs cannot be cheaper, and identical payoffs must have identical prices.
+%These local no-arbitrage principles lead to replication pricing, equivalent martingale measures, and the two Fundamental Theorems of Asset Pricing.
+%}
+%
+%\subsection{The dominance principle}
+%
+%The most elementary no-arbitrage principle is the \emph{dominance principle}:
+%if one contract always pays at least as much as another one, then it cannot cost less.
+%
+%Suppose two contracts mature at the same date \(T\), with payoffs \(A\) and \(B\), and current prices \(a\) and \(b\).
+%If
+%\[
+%A\ge B
+%\qquad\text{in every state of the world,}
+%\]
+%then no-arbitrage implies
+%\[
+%\boxed{\ a\ge b.\ }
+%\]
+%
+%\paragraph{Reason.}
+%If instead \(a<b\), one could buy the cheaper contract with larger payoff \(A\) and sell the more expensive contract with smaller payoff \(B\).
+%This produces:
+%\begin{itemize}
+%    \item a strictly positive gain at time \(0\),
+%    \item a terminal payoff \(A-B\ge 0\).
+%\end{itemize}
+%This is an arbitrage.
+%
+%\paragraph{Interpretation.}
+%The dominance principle is the most basic monotonicity rule for prices:
+%\[
+%\text{larger payoff} \quad\Longrightarrow\quad \text{larger price.}
+%\]
+%
+%\subsection{Law of one price}
+%
+%A second fundamental no-arbitrage rule is the \emph{law of one price}:
+%
+%\begin{quote}
+%If two portfolios generate exactly the same terminal cashflows in all states, then they must have the same initial cost.
+%\end{quote}
+%
+%If two strategies \(X\) and \(Y\) satisfy
+%\[
+%X_T=Y_T \qquad \text{a.s.}
+%\]
+%but \(X_0\neq Y_0\), then one may buy the cheaper one and sell the more expensive one.
+%This yields:
+%\begin{itemize}
+%    \item a strictly positive gain at time \(0\),
+%    \item zero payoff at maturity.
+%\end{itemize}
+%Hence this is again an arbitrage.
+%
+%\paragraph{Key consequence.}
+%If a contingent claim \(H\) can be replicated by a self-financing portfolio, then its arbitrage-free price is uniquely determined by the initial cost of that replicating strategy.
+%
+%\subsection{Example: forward price from no-arbitrage}
+%
+%Consider a forward contract written on a stock, with maturity \(T\) and delivery price \(K_t\).
+%Its payoff at maturity is
+%\[
+%S_T-K_t.
+%\]
+%
+%\paragraph{Replication argument.}
+%The same payoff can be produced by:
+%\begin{itemize}
+%    \item buying one share of stock today,
+%    \item borrowing the present value of \(K_t\), i.e.\ selling \(K_t\) units of the zero-coupon bond maturing at \(T\).
+%\end{itemize}
+%
+%If \(P_t(T)\) denotes the time-\(t\) price of the zero-coupon bond paying \(1\) at time \(T\), the initial cost of this replicating strategy is
+%\[
+%S_t-K_tP_t(T).
+%\]
+%
+%A forward contract has zero initial value in equilibrium, so no-arbitrage implies
+%\[
+%S_t-K_tP_t(T)=0,
+%\]
+%hence
+%\[
+%\boxed{\ K_t=\frac{S_t}{P_t(T)}.\ }
+%\]
+%
+%\paragraph{Constant-rate case.}
+%If the short rate is constant \(r\), then
+%\[
+%P_t(T)=e^{-r(T-t)},
+%\]
+%so the forward price is
+%\[
+%\boxed{\ K_t=S_t e^{r(T-t)}.\ }
+%\]
+%
+%\subsection{Equivalent martingale measures}
+%
+%The martingale pricing formula is the probabilistic formulation of no-arbitrage.
+%
+%\begin{definition}[Equivalent martingale measure]
+%A probability measure \(\Qbb\) is called an \emph{equivalent martingale measure} (EMM) if:
+%\begin{itemize}
+%    \item \(\Qbb\sim\Pbb\) (same null events),
+%    \item every discounted traded asset price process is a \(\Qbb\)-martingale
+%    (or, in more general formulations, a local martingale).
+%\end{itemize}
+%\end{definition}
+%
+%\paragraph{Interpretation.}
+%Changing from \(\Pbb\) to \(\Qbb\) does not change which states are possible.
+%It only changes their probabilities in such a way that discounted traded assets have zero drift.
+%
+%This is exactly what happens in Black--Scholes:
+%under the risk-neutral measure, the discounted stock price \(D_tS_t\) is a martingale.
+%
+%\subsection{First Fundamental Theorem of Asset Pricing (informal)}
+%
+%\begin{theorem}[FTAP I --- informal]
+%A market is arbitrage-free if and only if there exists an equivalent martingale measure \(\Qbb\) such that all discounted traded asset prices are \(\Qbb\)-martingales.
+%\end{theorem}
+%
+%\paragraph{Meaning.}
+%This theorem identifies two equivalent viewpoints:
+%\begin{itemize}
+%    \item \textbf{economic viewpoint:} no arbitrage,
+%    \item \textbf{probabilistic viewpoint:} existence of an EMM.
+%\end{itemize}
+%
+%\paragraph{Connection with the course.}
+%In the Black--Scholes model, Girsanov's theorem is the tool that constructs the EMM by changing the drift of the stock from \(\mu\) to \(r\).
+%
+%\subsection{Second Fundamental Theorem of Asset Pricing (informal)}
+%
+%\begin{theorem}[FTAP II --- informal]
+%In an arbitrage-free market, the following are essentially equivalent:
+%\begin{itemize}
+%    \item the market is complete,
+%    \item the equivalent martingale measure is unique.
+%\end{itemize}
+%\end{theorem}
+%
+%\paragraph{Interpretation.}
+%\begin{itemize}
+%    \item If the EMM is unique, then arbitrage-free pricing is unique.
+%    \item If there are several EMMs, then no-arbitrage usually gives only a range of possible prices.
+%\end{itemize}
+%
+%Thus:
+%\[
+%\text{complete market}
+%\quad\Longleftrightarrow\quad
+%\text{unique EMM}
+%\quad\Longleftrightarrow\quad
+%\text{unique arbitrage-free price.}
+%\]
+%
+%\subsection{Superhedging and price bounds}
+%
+%The dominance principle leads naturally to superhedging bounds.
+%
+%Suppose a self-financing portfolio \(X\) satisfies
+%\[
+%X_T\ge H
+%\qquad\text{a.s.}
+%\]
+%for some contingent claim \(H\).
+%Then \(X\) dominates the claim at maturity, so the claim price \(V_0\) must satisfy
+%\[
+%\boxed{\ V_0\le X_0.\ }
+%\]
+%
+%Similarly, if another portfolio \(Y\) satisfies
+%\[
+%Y_T\le H,
+%\]
+%then
+%\[
+%\boxed{\ Y_0\le V_0.\ }
+%\]
+%
+%\paragraph{Special case: exact replication.}
+%If \(X_T=H\), then upper and lower bounds coincide, and the claim price is uniquely determined:
+%\[
+%V_0=X_0.
+%\]
+%
+%\subsection{Practical takeaway}
+%
+%The logical structure of pricing is:
+%
+%\begin{enumerate}
+%    \item No-arbitrage principles rule out inconsistent prices.
+%    \item Replication gives exact prices when a claim can be synthesized.
+%    \item Equivalent martingale measures translate no-arbitrage into probability.
+%    \item Completeness determines whether the arbitrage-free price is unique.
+%\end{enumerate}
+%
+%\paragraph{Big picture.}
+%The dominance principle is the local version of no-arbitrage.
+%The Fundamental Theorems of Asset Pricing are the global mathematical version of the same idea:
+%\[
+%\text{no-arbitrage}
+%\quad\Longleftrightarrow\quad
+%\text{martingale pricing under a suitable measure.}
+%\]
+%
+%\begin{remark}
+%Pedagogically, the dominance principle is the fastest way to derive inequalities and simple bounds,
+%while the Fundamental Theorems explain the full mathematical architecture behind risk-neutral pricing.
+%\end{remark}
+%
+%
+%
+%% ============================================================
+%\section{Lecture 9-- Static arbitrage: bounds and structural properties}
+%% ============================================================
+%
+%
+%\paragraph{References}
+%% ============================================================
+%
+%\begin{itemize}[leftmargin=1.4em]
+%
+%\item \textit{Arbitrage Theory in Continuous Time},  
+%T. Björk  
+%\hfill Chapter~\underline{\hspace{1cm}}, pp.~\underline{\hspace{1cm}}
+%
+%\item \textit{Stochastic Calculus for Finance II: Continuous-Time Models},  
+%S. E. Shreve  
+%\hfill Chapter~\underline{\hspace{1cm}}, pp.~\underline{\hspace{1cm}}
+%
+%\item \textit{Brownian Motion and Stochastic Calculus},  
+%I. Karatzas and S. E. Shreve  
+%\hfill Chapter~\underline{\hspace{1cm}}, pp.~\underline{\hspace{1cm}}
+%
+%\end{itemize}
+%
+%
+%\paragraph{General principle.}
+%All the following inequalities follow from the absence of arbitrage:
+%a strategy with a non-negative payoff cannot have a negative price.
+%
+%\medskip
+%
+%% ------------------------------------------------------------
+%\subsection{Basic bounds for call options}
+%% ------------------------------------------------------------
+%
+%Let \(C_t(K,T)\) be the price of a European call.
+%
+%\paragraph{Lower bounds.}
+%\[
+%C_t \ge 0,
+%\qquad
+%C_t \ge S_t - K e^{-r(T-t)}.
+%\]
+%
+%Thus
+%\[
+%\boxed{
+%C_t \ge \max\!\big(S_t-K e^{-r(T-t)},0\big).
+%}
+%\]
+%
+%\paragraph{Upper bound.}
+%\[
+%\boxed{
+%C_t \le S_t.
+%}
+%\]
+%
+%\medskip
+%
+%\paragraph{Interpretation.}
+%\begin{itemize}[leftmargin=1.4em]
+%\item a call is always worth at least its discounted intrinsic value;
+%\item a call cannot be worth more than the underlying asset.
+%\end{itemize}
+%
+%% ------------------------------------------------------------
+%\subsection{Basic bounds for put options}
+%% ------------------------------------------------------------
+%
+%Let \(P_t(K,T)\) be the price of a European put.
+%
+%\paragraph{Lower bounds.}
+%\[
+%P_t \ge 0,
+%\qquad
+%P_t \ge K e^{-r(T-t)} - S_t.
+%\]
+%
+%Thus
+%\[
+%\boxed{
+%P_t \ge \max\!\big(K e^{-r(T-t)}-S_t,0\big).
+%}
+%\]
+%
+%\paragraph{Upper bound.}
+%\[
+%\boxed{
+%P_t \le K e^{-r(T-t)}.
+%}
+%\]
+%
+%\medskip
+%
+%\paragraph{Interpretation.}
+%\begin{itemize}[leftmargin=1.4em]
+%\item a put cannot be worth more than the discounted strike;
+%\item the lower bound reflects the value of selling the asset at \(K\).
+%\end{itemize}
+%
+%% ------------------------------------------------------------
+%\subsection{Put--call parity}
+%% ------------------------------------------------------------
+%
+%\[
+%\boxed{
+%C_t - P_t = S_t - K e^{-r(T-t)}.
+%}
+%\]
+%
+%\paragraph{Interpretation.}
+%\[
+%\text{call} + \text{bond}
+%\quad\Longleftrightarrow\quad
+%\text{put} + \text{stock}.
+%\]
+%
+%\paragraph{Use.}
+%\begin{itemize}[leftmargin=1.4em]
+%\item recover one price from the other;
+%\item detect arbitrage opportunities.
+%\end{itemize}
+%
+%% ------------------------------------------------------------
+%\subsection{Monotonicity in the strike}
+%% ------------------------------------------------------------
+%
+%\[
+%K_1<K_2
+%\quad\Rightarrow\quad
+%\boxed{
+%C(K_1)\ge C(K_2),
+%\qquad
+%P(K_1)\le P(K_2).
+%}
+%\]
+%
+%\paragraph{Interpretation.}
+%\begin{itemize}[leftmargin=1.4em]
+%\item lower strike calls are more valuable;
+%\item higher strike puts are more valuable.
+%\end{itemize}
+%
+%% ------------------------------------------------------------
+%\subsection{Convexity in the strike}
+%% ------------------------------------------------------------
+%
+%\[
+%\boxed{
+%C(K)\ \text{and}\ P(K)\ \text{are convex in }K.
+%}
+%\]
+%
+%Equivalently, for \(K_1<K_2<K_3\),
+%\[
+%C(K_2)
+%\le
+%\frac{K_3-K_2}{K_3-K_1}C(K_1)
+%+
+%\frac{K_2-K_1}{K_3-K_1}C(K_3).
+%\]
+%
+%\paragraph{Interpretation.}
+%\begin{itemize}[leftmargin=1.4em]
+%\item convexity is equivalent to absence of butterfly arbitrage;
+%\item ensures consistency of option prices across strikes.
+%\end{itemize}
+%
+%% ------------------------------------------------------------
+%\subsection{Maturity (calendar) inequalities}
+%% ------------------------------------------------------------
+%
+%If \(r=0\) and no dividends:
+%\[
+%\boxed{
+%T_1<T_2
+%\quad\Rightarrow\quad
+%C(K,T_2)\ge C(K,T_1).
+%}
+%\]
+%
+%\paragraph{Interpretation.}
+%More time increases optionality.
+%
+%\medskip
+%
+%With rates or dividends, the relation becomes more subtle.
+%
+%% ------------------------------------------------------------
+%\subsection{Key takeaway}
+%% ------------------------------------------------------------
+%
+%\begin{itemize}[leftmargin=1.4em]
+%\item option prices are highly constrained by no-arbitrage;
+%\item these constraints are model-free;
+%\item any violation leads to a static arbitrage strategy.
+%\end{itemize}
+%
+%% ============================================================
+%\section{Lecture 10-- American options: dynamic programming, optimal stopping, and PDE}
+%% ============================================================
+%
+%
+%\paragraph{References}
+%% ============================================================
+%
+%\begin{itemize}[leftmargin=1.4em]
+%
+%\item \textit{Arbitrage Theory in Continuous Time},  
+%T. Björk  
+%\hfill Chapter~21, pp.~329-349
+%
+%\item \textit{Stochastic Calculus for Finance II: Continuous-Time Models},  
+%S. E. Shreve, Chapter~8, pp.~339-374
+%
+%\end{itemize}
+%
+%
+%\paragraph{General principle.}
+%An American option can be exercised at any time before maturity.
+%Pricing therefore becomes an \emph{optimal stopping problem}.
+%
+%\medskip
+%
+%% ------------------------------------------------------------
+%\subsection{Discrete-time formulation}
+%% ------------------------------------------------------------
+%
+%Let \(g(S_t)\) be the payoff obtained if the option is exercised at time \(t\).
+%For example:
+%\[
+%g(S_t)=(S_t-K)^+
+%\qquad\text{or}\qquad
+%g(S_t)=(K-S_t)^+.
+%\]
+%
+%If
+%\[
+%\beta=\frac{1}{1+r},
+%\]
+%the value process is
+%\[
+%\boxed{
+%V_t
+%=
+%\operatorname*{ess\,sup}_{\tau\in\mathcal{T}_t}
+%\E^{\Qbb}\!\left[
+%\beta^{\tau-t} g(S_\tau)
+%\;\middle|\;
+%\mathcal{F}_t
+%\right].
+%}
+%\]
+%
+%\paragraph{Interpretation.}
+%At time \(t\), the holder chooses the exercise date \(\tau\) optimally.
+%
+%% ------------------------------------------------------------
+%\subsection{Bellman recursion}
+%% ------------------------------------------------------------
+%
+%The discrete-time problem is solved by backward induction:
+%\[
+%\boxed{
+%V_T=g(S_T),
+%\qquad
+%V_t=\max\!\left(g(S_t),\beta\E^{\Qbb}[V_{t+1}\mid\mathcal{F}_t]\right),
+%\quad t=T-1,\dots,0.
+%}
+%\]
+%
+%\paragraph{Interpretation.}
+%At each date, compare:
+%\begin{itemize}[leftmargin=1.4em]
+%\item the \emph{immediate exercise value} \(g(S_t)\),
+%\item the \emph{continuation value} \(\beta\E^{\Qbb}[V_{t+1}\mid\mathcal{F}_t]\).
+%\end{itemize}
+%
+%Exercise is optimal whenever
+%\[
+%\boxed{
+%g(S_t)\ge \beta\E^{\Qbb}[V_{t+1}\mid\mathcal{F}_t].
+%}
+%\]
+%
+%A natural optimal stopping time is
+%\[
+%\boxed{
+%\tau^*:=\inf\{t\in\{0,\dots,T\}:V_t=g(S_t)\}.
+%}
+%\]
+%
+%% ------------------------------------------------------------
+%\subsection{Exercise and continuation regions}
+%% ------------------------------------------------------------
+%
+%\[
+%\boxed{
+%\text{Exercise region: } V_t=g(S_t),
+%\qquad
+%\text{Continuation region: } V_t>g(S_t).
+%}
+%\]
+%
+%In the exercise region, it is optimal to stop immediately.
+%In the continuation region, it is optimal to wait.
+%
+%% ------------------------------------------------------------
+%\subsection{Snell envelope}
+%% ------------------------------------------------------------
+%
+%Define the discounted payoff process
+%\[
+%Y_t:=\beta^t g(S_t),
+%\qquad
+%\widetilde V_t:=\beta^t V_t.
+%\]
+%
+%Then \((\widetilde V_t)\) is the \emph{Snell envelope} of \(Y\), i.e. the smallest supermartingale dominating \(Y\):
+%\[
+%\boxed{
+%\widetilde V_T=Y_T,
+%\qquad
+%\widetilde V_t=\max\!\left(Y_t,\E^{\Qbb}[\widetilde V_{t+1}\mid\mathcal{F}_t]\right).
+%}
+%\]
+%
+%\paragraph{Interpretation.}
+%American option pricing is both:
+%\begin{itemize}[leftmargin=1.4em]
+%\item a pricing problem,
+%\item an optimal stopping problem,
+%\item a supermartingale domination problem.
+%\end{itemize}
+%
+%% ------------------------------------------------------------
+%\subsection{Comparison with European options}
+%% ------------------------------------------------------------
+%
+%For a European option,
+%\[
+%\boxed{
+%V_t^{\mathrm{Eur}}
+%=
+%\E^{\Qbb}\!\left[
+%\beta^{T-t}g(S_T)
+%\;\middle|\;
+%\mathcal{F}_t
+%\right].
+%}
+%\]
+%
+%Hence
+%\[
+%\boxed{
+%V_t^{\mathrm{Am}}\ge V_t^{\mathrm{Eur}}.
+%}
+%\]
+%
+%The difference
+%\[
+%V_t^{\mathrm{Am}}-V_t^{\mathrm{Eur}}
+%\]
+%is called the \emph{early exercise premium}.
+%
+%% ------------------------------------------------------------
+%\subsection{Continuous-time formulation}
+%% ------------------------------------------------------------
+%
+%In continuous time, in the Black--Scholes model
+%\[
+%\dd S_t=rS_t\,\dd t+\sigma S_t\,\dd W_t,
+%\]
+%the American option price is
+%\[
+%\boxed{
+%V_t
+%=
+%\operatorname*{ess\,sup}_{\tau\in\mathcal{T}_{t,T}}
+%\E^{\Qbb}\!\left[
+%e^{-r(\tau-t)}g(S_\tau)
+%\;\middle|\;
+%\mathcal{F}_t
+%\right].
+%}
+%\]
+%
+%If the problem is Markovian, one writes
+%\[
+%V_t=v(t,S_t).
+%\]
+%
+%% ------------------------------------------------------------
+%\subsection{Variational inequality / PDE formulation}
+%% ------------------------------------------------------------
+%
+%The value function satisfies the variational inequality
+%\[
+%\boxed{
+%\max\!\big(g(s)-v(t,s),\; v_t + rs\,v_s + \tfrac12\sigma^2 s^2 v_{ss} - rv\big)=0,
+%}
+%\]
+%with terminal condition
+%\[
+%\boxed{
+%v(T,s)=g(s).
+%}
+%\]
+%
+%\paragraph{Interpretation.}
+%Either:
+%\begin{itemize}[leftmargin=1.4em]
+%\item \(v(t,s)=g(s)\) and immediate exercise is optimal,
+%\item or \(v_t + rs\,v_s + \tfrac12\sigma^2 s^2 v_{ss} - rv=0\) and continuation is optimal.
+%\end{itemize}
+%
+%% ------------------------------------------------------------
+%\subsection{Free boundary / early exercise boundary}
+%% ------------------------------------------------------------
+%
+%The boundary separating the stopping region from the continuation region is called the
+%\emph{early exercise boundary} or \emph{free boundary}.
+%
+%For the American put, this often takes the form of a critical level \(s^*(t)\):
+%\[
+%\boxed{
+%\text{exercise if } S_t\le s^*(t),
+%\qquad
+%\text{continue if } S_t>s^*(t).
+%}
+%\]
+%
+%This boundary is not known in advance and must be determined as part of the solution.
+%
+%% ------------------------------------------------------------
+%\subsection{Important qualitative facts}
+%% ------------------------------------------------------------
+%
+%\paragraph{American call with no dividends.}
+%A fundamental result is
+%\[
+%\boxed{
+%C^{\mathrm{Am}}=C^{\mathrm{Eur}}
+%}
+%\]
+%for a non-dividend-paying stock.
+%So an American call should \emph{never} be exercised early in that case.
+%
+%\paragraph{American put.}
+%For an American put, early exercise may be optimal if:
+%\begin{itemize}[leftmargin=1.4em]
+%\item the option is sufficiently in the money,
+%\item little time value remains,
+%\item positive interest rates make it attractive to receive cash earlier.
+%\end{itemize}
+%
+%% ------------------------------------------------------------
+%\subsection{Numerical methods}
+%% ------------------------------------------------------------
+%
+%Since closed-form formulas are rarely available, numerical methods are essential.
+%
+%\paragraph{Tree methods.}
+%Backward induction is natural and handles early exercise directly.
+%
+%\paragraph{Finite differences.}
+%Discretize the variational inequality and enforce
+%\[
+%v(t,s)\ge g(s)
+%\]
+%at each time step.
+%
+%\paragraph{Monte Carlo.}
+%More difficult than for European options because continuation values must be estimated.
+%
+%\paragraph{Longstaff--Schwartz.}
+%A regression-based method:
+%\begin{itemize}[leftmargin=1.4em]
+%\item simulate paths,
+%\item go backward from maturity,
+%\item estimate continuation values by regression,
+%\item compare continuation and exercise values.
+%\end{itemize}
+%
+%% ------------------------------------------------------------
+%\subsection{Key takeaway}
+%% ------------------------------------------------------------
+%
+%\begin{itemize}[leftmargin=1.4em]
+%\item American option pricing = risk-neutral valuation + optimal stopping.
+%\item In discrete time: Bellman recursion / backward induction.
+%\item In continuous time: variational inequality + free boundary.
+%\item The American put has a genuine exercise region.
+%\item Numerical methods are central in practice.
+%\end{itemize}
+%\newpage 
+%
+%\section{Appendix : Python Basics Summary}
+%
+%\paragraph{References}
+%% ============================================================
+%
+%
+%\subsection{Simulating a Brownian motion}
+%
+%\paragraph{Goal.}
+%We want to simulate on a grid $0=t_0<t_1<\cdots<t_N=T$ a Brownian motion
+%$(W_t)_{t\in[0,T]}$ such that
+%\[
+%W_0=0,
+%\qquad
+%W_{t_{k+1}}-W_{t_k}\sim \mathcal N(0,\Delta t_k),
+%\qquad
+%\Delta t_k:=t_{k+1}-t_k,
+%\]
+%and the increments are independent.
+%
+%\paragraph{Discrete-time construction.}
+%Generate i.i.d.\ standard Gaussians $(Z_k)_{k=0,\dots,N-1}$ with $Z_k\sim \mathcal N(0,1)$, and set
+%\[
+%\Delta W_k := \sqrt{\Delta t_k}\,Z_k,
+%\qquad
+%W_{t_{k+1}} := W_{t_k} + \Delta W_k.
+%\]
+%Equivalently, on a uniform grid $\Delta t = T/N$,
+%\[
+%W_{t_k} = \sum_{j=0}^{k-1}\sqrt{\Delta t}\,Z_j.
+%\]
+%
+%\newpage 
+%\paragraph{Single path in NumPy.}
+%\begin{verbatim}
+%import numpy as np
+%
+%def brownian_path(T=1.0, N=252, seed=None):
+%    """
+%    Simulate one Brownian path on a uniform grid of N steps over [0,T].
+%    Returns:
+%        t: shape (N+1,)
+%        W: shape (N+1,), with W[0]=0
+%        dW: shape (N,), increments
+%    """
+%    rng = np.random.default_rng(seed)
+%    dt = T / N
+%    dW = np.sqrt(dt) * rng.standard_normal(size=N)
+%    W = np.empty(N + 1)
+%    W[0] = 0.0
+%    W[1:] = np.cumsum(dW)
+%    t = np.linspace(0.0, T, N + 1)
+%    return t, W, dW
+%\end{verbatim}
+%
+%\paragraph{Many paths at once (vectorized).}
+%For Monte Carlo, it is more efficient to simulate $M$ paths simultaneously:
+%\begin{verbatim}
+%def brownian_paths(T=1.0, N=252, M=10_000, seed=None):
+%    """
+%    Simulate M Brownian paths on a uniform grid of N steps over [0,T].
+%    Returns:
+%        t:  shape (N+1,)
+%        W:  shape (M, N+1)
+%        dW: shape (M, N)
+%    """
+%    rng = np.random.default_rng(seed)
+%    dt = T / N
+%    dW = np.sqrt(dt) * rng.standard_normal(size=(M, N))
+%    W = np.concatenate([np.zeros((M, 1)), np.cumsum(dW, axis=1)], axis=1)
+%    t = np.linspace(0.0, T, N + 1)
+%    return t, W, dW
+%\end{verbatim}
+%
+%\paragraph{Sanity checks (recommended).}
+%A correct simulation should satisfy:
+%\begin{itemize}[leftmargin=1.6em, itemsep=0.25em]
+%\item \textbf{Mean/variance:} $\E[W_T]=0$ and $\mathrm{Var}(W_T)=T$.
+%Empirically, with $M$ large, $\frac1M\sum_{m=1}^M W_T^{(m)}\approx 0$
+%and $\frac1M\sum_{m=1}^M (W_T^{(m)})^2 \approx T$.
+%\item \textbf{Independent increments:} increments over disjoint intervals should be (approximately) uncorrelated.
+%\item \textbf{Scaling:} $W_t \stackrel{d}{=} \sqrt{t}\,Z$ with $Z\sim\mathcal N(0,1)$.
+%\end{itemize}
+%
+%\paragraph{Correlated Brownian motions (2D).}
+%If $(W^1,W^2)$ is a 2D Brownian motion with correlation $\rho\in[-1,1]$, then for each time step
+%\[
+%\begin{pmatrix}\Delta W^1_k\\ \Delta W^2_k\end{pmatrix}
+%=
+%\sqrt{\Delta t}\,
+%\begin{pmatrix}
+%1 & 0\\
+%\rho & \sqrt{1-\rho^2}
+%\end{pmatrix}
+%\begin{pmatrix}Z^1_k\\ Z^2_k\end{pmatrix},
+%\qquad
+%(Z^1_k,Z^2_k)\ \text{i.i.d.}\ \mathcal N(0,I_2).
+%\]
+%Implementation:
+%\begin{verbatim}
+%def correlated_brownian_paths(T=1.0, N=252, M=10_000, rho=0.0, seed=None):
+%    """
+%    Simulate M paths of (W1, W2) with Corr(dW1, dW2)=rho on a uniform grid.
+%    Returns:
+%        t:  shape (N+1,)
+%        W1, W2: shape (M, N+1)
+%        dW1, dW2: shape (M, N)
+%    """
+%    rng = np.random.default_rng(seed)
+%    dt = T / N
+%    Z = rng.standard_normal(size=(M, N, 2))  # independent N(0,1)
+%    Z1, Z2 = Z[..., 0], Z[..., 1]
+%
+%    dW1 = np.sqrt(dt) * Z1
+%    dW2 = np.sqrt(dt) * (rho * Z1 + np.sqrt(1.0 - rho**2) * Z2)
+%
+%    W1 = np.concatenate([np.zeros((M, 1)), np.cumsum(dW1, axis=1)], axis=1)
+%    W2 = np.concatenate([np.zeros((M, 1)), np.cumsum(dW2, axis=1)], axis=1)
+%    t = np.linspace(0.0, T, N + 1)
+%    return t, W1, W2, dW1, dW2
+%\end{verbatim}
+%
+%\paragraph{Link with quadratic variation (discrete viewpoint).}
+%If $\Delta t=T/N$ and $W$ is simulated as above, then
+%\[
+%\sum_{k=0}^{N-1} (\Delta W_k)^2 \approx T
+%\quad\text{for large }N,
+%\]
+%which mirrors the continuous-time identity $[W]_T=T$.
+%
+%\subsection{Simulating a stochastic integral}
+%
+%\paragraph{Goal.}
+%Given an adapted process $(\phi_t)_{t\in[0,T]}$, we want to approximate the It\^o integral
+%\[
+%\int_0^T \phi_t\,\dd W_t
+%\]
+%on a time grid
+%\[
+%0=t_0<t_1<\cdots<t_N=T.
+%\]
+%The key point is that the It\^o integral uses the \emph{left-point} (predictable) convention:
+%the integrand is evaluated before the Brownian increment is realized.
+%
+%\paragraph{Discrete approximation (It\^o sum).}
+%On the grid, define
+%\[
+%\Delta W_k := W_{t_{k+1}}-W_{t_k}.
+%\]
+%Then the natural approximation is the left Riemann sum
+%\[
+%\int_0^T \phi_t\,\dd W_t
+%\;\approx\;
+%\sum_{k=0}^{N-1} \phi_{t_k}\,\Delta W_k.
+%\]
+%This is exactly the discrete object from which the It\^o integral is constructed.
+%
+%\paragraph{Why the left point matters.}
+%To simulate the It\^o integral correctly, $\phi_{t_k}$ must be measurable with respect to the information available at time $t_k$.
+%In practice:
+%\begin{itemize}[leftmargin=1.6em, itemsep=0.25em]
+%\item $\phi_{t_k}$ may depend on $(W_{t_0},\dots,W_{t_k})$,
+%\item but it must \emph{not} depend on $\Delta W_k$ itself.
+%\end{itemize}
+%This is the discrete non-anticipative (predictable) condition.
+%
+%\paragraph{Example 1: deterministic integrand.}
+%If $\phi_t=f(t)$ is deterministic, then
+%\[
+%\int_0^T f(t)\,\dd W_t
+%\;\approx\;
+%\sum_{k=0}^{N-1} f(t_k)\,\Delta W_k.
+%\]
+%This is the simplest case: one just weights the Brownian increments by known coefficients.
+%
+%\paragraph{Example 2: path-dependent adapted integrand.}
+%If $\phi_t=W_t$, then
+%\[
+%\int_0^T W_t\,\dd W_t
+%\;\approx\;
+%\sum_{k=0}^{N-1} W_{t_k}\,\Delta W_k.
+%\]
+%This is the discrete version of the identity
+%\[
+%\int_0^T W_t\,\dd W_t = \frac12(W_T^2-T).
+%\]
+%
+%\paragraph{Single path implementation.}
+%Assume we already simulated a Brownian path $(t,W,dW)$ on a uniform grid.
+%Then a generic discrete It\^o integral can be computed as follows:
+%\begin{verbatim}
+%def ito_integral_from_path(phi, dW):
+%    """
+%    Approximate sum_k phi[k] * dW[k].
+%
+%    Parameters
+%    ----------
+%    phi : array of shape (N,)
+%        Values of the integrand at left points t_0, ..., t_{N-1}.
+%    dW : array of shape (N,)
+%        Brownian increments.
+%
+%    Returns
+%    -------
+%    float
+%        Discrete Ito integral approximation.
+%    """
+%    return np.sum(phi * dW)
+%\end{verbatim}
+%
+%\paragraph{Example: simulate \texorpdfstring{$\int_0^T W_t\,\dd W_t$}{∫ W_t dW_t}.}
+%\begin{verbatim}
+%def ito_integral_W_dW(T=1.0, N=252, seed=None):
+%    """
+%    Simulate one path and approximate int_0^T W_t dW_t.
+%    """
+%    t, W, dW = brownian_path(T=T, N=N, seed=seed)
+%    phi = W[:-1]              # left-point values W_{t_k}
+%    I = np.sum(phi * dW)
+%    return t, W, I
+%\end{verbatim}
+%
+%\paragraph{Many paths at once (vectorized Monte Carlo).}
+%If \texttt{W} has shape $(M,N+1)$ and \texttt{dW} has shape $(M,N)$, then
+%the integral can be approximated pathwise by
+%\begin{verbatim}
+%def ito_integral_paths(phi, dW):
+%    """
+%    Vectorized Ito integral for many paths.
+%
+%    Parameters
+%    ----------
+%    phi : array of shape (M, N)
+%        Left-point values of the integrand.
+%    dW  : array of shape (M, N)
+%        Brownian increments.
+%
+%    Returns
+%    -------
+%    I : array of shape (M,)
+%        One integral value per path.
+%    """
+%    return np.sum(phi * dW, axis=1)
+%\end{verbatim}
+%
+%\paragraph{Sanity check via It\^o isometry.}
+%A key theoretical identity is
+%\[
+%\E\!\left[\left(\int_0^T \phi_t\,\dd W_t\right)^2\right]
+%=
+%\E\!\left[\int_0^T \phi_t^2\,\dd t\right].
+%\]
+%On the grid, this becomes heuristically
+%\[
+%\E\!\left[\left(\sum_{k=0}^{N-1}\phi_{t_k}\Delta W_k\right)^2\right]
+%\approx
+%\E\!\left[\sum_{k=0}^{N-1}\phi_{t_k}^2\,\Delta t\right].
+%\]
+%This is a very useful numerical check.
+%
+%\paragraph{Numerical check for \texorpdfstring{$\phi_t=W_t$}{phi = W}.}
+%If $\phi_t=W_t$, then
+%\[
+%\E\!\left[\int_0^T W_t^2\,\dd t\right]
+%=
+%\int_0^T \E[W_t^2]\,\dd t
+%=
+%\int_0^T t\,\dd t
+%=
+%\frac{T^2}{2}.
+%\]
+%Therefore,
+%\[
+%\E\!\left[\left(\int_0^T W_t\,\dd W_t\right)^2\right]
+%=
+%\frac{T^2}{2}.
+%\]
+%A Monte Carlo simulation of
+%\[
+%\sum_{k=0}^{N-1} W_{t_k}\Delta W_k
+%\]
+%should empirically recover this value.
+%
+%\paragraph{Important warning: It\^o vs ordinary integration.}
+%The approximation
+%\[
+%\sum_{k=0}^{N-1} \phi_{t_k}\Delta W_k
+%\]
+%is \emph{not} an ordinary Riemann integral.
+%Its limiting behavior is governed by Brownian quadratic variation.
+%Changing the sampling point (left, right, midpoint) may change the limit.
+%For the It\^o integral, the correct choice is the \emph{left-point} convention.
+%
+%\paragraph{Extension: stochastic integral with respect to another It\^o process.}
+%If
+%\[
+%\dd X_t = a_t\,\dd t + b_t\,\dd W_t,
+%\]
+%then
+%\[
+%\int_0^T \phi_t\,\dd X_t
+%=
+%\int_0^T \phi_t a_t\,\dd t
+%+
+%\int_0^T \phi_t b_t\,\dd W_t.
+%\]
+%Numerically, on a grid:
+%\[
+%\int_0^T \phi_t\,\dd X_t
+%\;\approx\;
+%\sum_{k=0}^{N-1}\phi_{t_k}\,(X_{t_{k+1}}-X_{t_k}).
+%\]
+%So once a path of \(X\) is simulated, the same left-point rule applies.
+%
+%\paragraph{Takeaway.}
+%To simulate an It\^o integral:
+%\begin{itemize}[leftmargin=1.6em, itemsep=0.25em]
+%\item simulate the driving Brownian increments,
+%\item evaluate the integrand at the left points,
+%\item sum \(\phi_{t_k}\Delta W_k\),
+%\item and use It\^o isometry as the main consistency check.
+%\end{itemize}
+%
+
+
+\end{document}
